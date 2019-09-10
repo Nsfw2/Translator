@@ -1,7 +1,7 @@
-async function ocr() {
-  const vision = require('@google-cloud/vision');
+const vision = require('@google-cloud/vision');
+
+async function ocr(filename) {
   const client = new vision.ImageAnnotatorClient();
-  const filename = '../sample/wakeupcat.jpg';
   const [result] = await client.textDetection(filename);
   const detections = result.textAnnotations;
   console.log('Text:');
@@ -10,4 +10,6 @@ async function ocr() {
     console.log(text.boundingPoly.vertices);
   });
 }
-ocr();
+
+const filename = '../sample/wakeupcat.jpg';
+ocr(filename);
