@@ -18,7 +18,9 @@ const templates = {
 `
   ),
   annotation: _.template(
-    `<div class="annotation" style="left: <%- x1 %>px; top: <%- y1 %>px; width: <%- dx %>px; height: <%- dy %>px;" title="<%- text %>"></div>`
+    `<div class="annotation" style="left: <%- x1 %>px; top: <%- y1 %>px; width: <%- dx %>px; height: <%- dy %>px;" title="<%- text %>">
+<div class="annotation-tooltip-root"><span class="annotation-tooltip"><%- text %></span></div>
+</div>`
   )
 };
 

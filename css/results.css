@@ -5,3 +5,18 @@
   position: absolute;
   border: 1px solid black;
 }
+.annotation-tooltip-root {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 0;
+}
+.annotation:not(:hover) > .annotation-tooltip-root {
+  display: none;
+}
+.annotation-tooltip {
+  position: relative;
+  top: 4px;
+  background: white;
+  border: 1px solid black;
+}
