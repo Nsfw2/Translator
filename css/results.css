@@ -16,7 +16,9 @@
 }
 .annotation-tooltip {
   position: relative;
-  top: 4px;
+  top: 6px;
   background: white;
   border: 1px solid black;
+  font-family: sans-serif;
+  padding: 2px;
 }
