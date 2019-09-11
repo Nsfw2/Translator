@@ -1,0 +1,7 @@
+.image-container {
+  position: relative;
+}
+.annotation {
+  position: absolute;
+  border: 1px solid black;
+}
