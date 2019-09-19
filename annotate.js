@@ -1,8 +1,5 @@
-const fs = require('fs');
-const fsPromises = fs.promises;
 const _ = require('lodash');
-
-const outputPath = './results/';
+const tempfile = require('./tempfile');
 
 const templates = {
   html: _.template(
@@ -11,7 +8,7 @@ const templates = {
 <link href="../css/results.css" rel="stylesheet">
 </head><body>
 <div class="image-container">
-<img src="../input/<%- hash %>.<%- extension %>">
+<img src="<%- hash %>.<%- extension %>">
 <%= annotationsHTML %>
 </div>
 </body></html>
@@ -44,16 +41,14 @@ function generateHTML(options) {
 }
 
 async function writeHTML(options) {
-  const {hash} = options;
-  const html = generateHTML(options);
-  const outputFilename = `${outputPath}${hash}.html`;
-  await fsPromises.mkdir(outputPath, {recursive: true});
-  await fsPromises.writeFile(`${outputFilename}.tmp`, html);
-  await fsPromises.rename(`${outputFilename}.tmp`, outputFilename);
+  return tempfile.write(`${options.hash}.html`, () => generateHTML(options));
 }
 
-const hash = '11ab77154e52e621cbeecb91e667b03e3d6f6ba7513717f59f11e4a0a956cf31a45fd7474adb5c2c3d588a8d67032e8e2b7b06242b6b3ab5df8a276b0c2f9cbd';
-const extension = 'jpg';
-const jsonFilename = `${outputPath}${hash}.json`;
-const annotations = JSON.parse(fs.readFileSync(jsonFilename, {encoding: 'utf8'}));
-writeHTML({annotations, hash, extension});
+async function test() {
+  const hash = '11ab77154e52e621cbeecb91e667b03e3d6f6ba7513717f59f11e4a0a956cf31a45fd7474adb5c2c3d588a8d67032e8e2b7b06242b6b3ab5df8a276b0c2f9cbd';
+  const extension = 'jpg';
+  const annotations = JSON.parse(await tempfile.read(`${hash}.json`, {encoding: 'utf8'}));
+  return writeHTML({annotations, hash, extension});
+}
+
+test();
