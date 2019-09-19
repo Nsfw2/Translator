@@ -1,8 +1,11 @@
 const vision = require('@google-cloud/vision');
 const tempfile = require('./tempfile');
 
+const client = new vision.ImageAnnotatorClient({
+  keyFilename: '../keys/google_application_credentials.json'
+});
+
 async function getOCR(filename) {
-  const client = new vision.ImageAnnotatorClient();
   const [result] = await client.textDetection(tempfile.path(filename));
   return result.textAnnotations;
 }
