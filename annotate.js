@@ -39,9 +39,9 @@ function addBreak(text, property) {
 }
 
 function extractText(paragraph) {
-  return paragraph.words.map(w =>
+  return (paragraph.words || []).map(w =>
     addBreak(
-      w.symbols.map(s => addBreak(s.text, s.property)).join(''),
+      (w.symbols || []).map(s => addBreak(s.text, s.property)).join(''),
       w.property
     )
   ).join('');
@@ -49,9 +49,9 @@ function extractText(paragraph) {
 
 function extractParagraphs(annotations) {
   const paragraphs = [];
-  annotations.fullTextAnnotation.pages.forEach(page => {
-    page.blocks.forEach(b => {
-      b.paragraphs.forEach(p => {
+  ((annotations.fullTextAnnotation || {}).pages || []).forEach(page => {
+    (page.blocks || []).forEach(b => {
+      (b.paragraphs || []).forEach(p => {
         paragraphs.push(p);
       });
     });
@@ -60,8 +60,9 @@ function extractParagraphs(annotations) {
 }
 
 function generateAnnotation(paragraph) {
-  const xs = paragraph.boundingBox.vertices.map(p => p.x);
-  const ys = paragraph.boundingBox.vertices.map(p => p.y);
+  const box = (paragraph.boundingBox || []);
+  const xs = box.vertices.map(p => p.x);
+  const ys = box.vertices.map(p => p.y);
   const x1 = Math.min.apply(Math, xs);
   const y1 = Math.min.apply(Math, ys);
   const dx = Math.max.apply(Math, xs) - x1;
