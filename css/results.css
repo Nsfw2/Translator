@@ -21,4 +21,6 @@
   border: 1px solid black;
   font-family: sans-serif;
   padding: 2px;
+  white-space: pre;
+  z-index: 1;
 }
