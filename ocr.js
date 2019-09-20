@@ -11,7 +11,7 @@ async function request(filename) {
 }
 
 async function write(hash) {
-  var annotations = tempfile.write(
+  var annotations = await tempfile.write(
     `${hash}.json`,
     () => request(hash),
     JSON.stringify
