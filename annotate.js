@@ -17,6 +17,9 @@ const templates = {
   ),
   annotation: _.template(
     `<div class="annotation" style="left: <%- x1 %>px; top: <%- y1 %>px; width: <%- dx %>px; height: <%- dy %>px;">
+<svg viewbox="0 0 <%- dx %> <%- dy %>" xmlns="http://www.w3.org/2000/svg">
+<polygon points="<%- points %>" fill="none" stroke="black" />
+</svg>
 <div class="annotation-tooltip-root"><div class="annotation-tooltip"><%- text %></div></div>
 </div>`
   )
@@ -68,8 +71,9 @@ function generateAnnotation(paragraph) {
   const y1 = Math.min.apply(Math, ys);
   const dx = Math.max.apply(Math, xs) - x1;
   const dy = Math.max.apply(Math, ys) - y1;
+  const points = vertices.map(p => `${p.x - x1},${p.y - y1}`).join(' ');
   const text = extractText(paragraph).trim();
-  const html = templates.annotation({x1, y1, dx, dy, text});
+  const html = templates.annotation({x1, y1, dx, dy, points, text});
   return html;
 }
 

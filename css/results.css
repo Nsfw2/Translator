@@ -3,7 +3,6 @@
 }
 .annotation {
   position: absolute;
-  border: 1px solid black;
 }
 .annotation-tooltip-root {
   position: absolute;
