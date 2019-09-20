@@ -3,6 +3,14 @@
 }
 .annotation {
   position: absolute;
+  pointer-events: none;
+}
+.annotation-polygon {
+  pointer-events: none;
+}
+.annotation-polygon > polygon {
+  pointer-events: fill;
+  z-index: 1;
 }
 .annotation-tooltip-root {
   position: absolute;
@@ -10,7 +18,7 @@
   bottom: 0;
   height: 0;
 }
-.annotation:not(:hover) > .annotation-tooltip-root {
+.annotation-polygon:not(:hover) ~ .annotation-tooltip-root {
   visibility: hidden;
 }
 .annotation-tooltip {

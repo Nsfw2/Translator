@@ -17,7 +17,7 @@ const templates = {
   ),
   annotation: _.template(
     `<div class="annotation" style="left: <%- x1 %>px; top: <%- y1 %>px; width: <%- dx %>px; height: <%- dy %>px;">
-<svg viewbox="0 0 <%- dx %> <%- dy %>" xmlns="http://www.w3.org/2000/svg">
+<svg class="annotation-polygon" viewbox="0 0 <%- dx %> <%- dy %>" xmlns="http://www.w3.org/2000/svg">
 <polygon points="<%- points %>" fill="none" stroke="black" />
 </svg>
 <div class="annotation-tooltip-root"><div class="annotation-tooltip"><%- text %></div></div>
