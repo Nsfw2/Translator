@@ -60,9 +60,10 @@ function extractParagraphs(annotations) {
 }
 
 function generateAnnotation(paragraph) {
-  const box = (paragraph.boundingBox || []);
-  const xs = box.vertices.map(p => p.x);
-  const ys = box.vertices.map(p => p.y);
+  if (!paragraph.boundingBox || !paragraph.boundingBox.vertices) return '';
+  const {vertices} = paragraph.boundingBox;
+  const xs = vertices.map(p => p.x);
+  const ys = vertices.map(p => p.y);
   const x1 = Math.min.apply(Math, xs);
   const y1 = Math.min.apply(Math, ys);
   const dx = Math.max.apply(Math, xs) - x1;
