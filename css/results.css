@@ -1,29 +1,19 @@
 .image-container {
   position: relative;
 }
-.annotation {
+.outline {
   position: absolute;
   pointer-events: none;
 }
-.annotation-polygon {
-  pointer-events: none;
-}
-.annotation-polygon > polygon {
+.outline > polygon {
   pointer-events: fill;
-  z-index: 1;
 }
-.annotation-tooltip-root {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  height: 0;
-}
-.annotation-polygon:not(:hover) ~ .annotation-tooltip-root {
+.outline:not(:hover) + .tooltip {
   visibility: hidden;
 }
-.annotation-tooltip {
-  position: relative;
-  top: 6px;
+.tooltip {
+  position: absolute;
+  margin-top: 6px;
   background: white;
   border: 1px solid black;
   font-family: sans-serif;

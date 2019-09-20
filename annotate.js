@@ -16,12 +16,10 @@ const templates = {
 `
   ),
   annotation: _.template(
-    `<div class="annotation" style="left: <%- x1 %>px; top: <%- y1 %>px; width: <%- dx %>px; height: <%- dy %>px;">
-<svg class="annotation-polygon" viewbox="0 0 <%- dx %> <%- dy %>" xmlns="http://www.w3.org/2000/svg">
+    `<svg class="outline" style="left: <%- x1 %>px; top: <%- y1 %>px; width: <%- dx %>px; height: <%- dy %>px;" viewbox="0 0 <%- dx %> <%- dy %>" xmlns="http://www.w3.org/2000/svg">
 <polygon points="<%- points %>" fill="none" stroke="black" />
 </svg>
-<div class="annotation-tooltip-root"><div class="annotation-tooltip"><%- text %></div></div>
-</div>`
+<div class="tooltip" style="left: <%- x1 %>px; top: <%- yt %>px;"><%- text %></div>`
   )
 };
 
@@ -72,8 +70,9 @@ function generateAnnotation(paragraph) {
   const dx = Math.max.apply(Math, xs) - x1;
   const dy = Math.max.apply(Math, ys) - y1;
   const points = vertices.map(p => `${p.x - x1},${p.y - y1}`).join(' ');
+  const yt = y1 + dy;
   const text = extractText(paragraph).trim();
-  const html = templates.annotation({x1, y1, dx, dy, points, text});
+  const html = templates.annotation({x1, y1, dx, dy, points, yt, text});
   return html;
 }
 
