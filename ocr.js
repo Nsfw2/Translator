@@ -7,7 +7,7 @@ const client = new vision.ImageAnnotatorClient({
 
 async function request(filename) {
   const [result] = await client.textDetection(tempfile.path(filename));
-  return result.textAnnotations;
+  return result;
 }
 
 async function write(hash) {

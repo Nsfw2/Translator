@@ -36,7 +36,7 @@ function generateAnnotation(annotation) {
 
 function generateHTML(options) {
   const {hash, annotations} = options;
-  annotationsHTML = annotations.map(generateAnnotation).join('\n');
+  annotationsHTML = annotations.textAnnotations.map(generateAnnotation).join('\n');
   const html = templates.html({hash, annotationsHTML});
   return html;
 }
