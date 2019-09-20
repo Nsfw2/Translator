@@ -4,6 +4,7 @@ const tempfile = require('./tempfile');
 const templates = {
   html: _.template(
     `<!doctype html><head>
+<meta charset="UTF-8">
 <title>Translation results</title>
 <link href="../css/results.css" rel="stylesheet">
 </head><body>
