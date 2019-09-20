@@ -22,21 +22,58 @@ const templates = {
   )
 };
 
-function generateAnnotation(annotation) {
-  const xs = annotation.boundingPoly.vertices.map(p => p.x);
-  const ys = annotation.boundingPoly.vertices.map(p => p.y);
+const breaksAsText = new Map([
+  ['UNKNOWN', ''],
+  ['SPACE', ' '],
+  ['SURE_SPACE', ' '],
+  ['EOL_SURE_SPACE', '\n'],
+  ['HYPHEN', '\n'],
+  ['LINE_BREAK', '\n']
+]);
+
+function addBreak(text, property) {
+  if (!property || !property.detectedBreak) return text;
+  const {type, isPrefix} = property.detectedBreak;
+  const breakText = (breaksAsText.get(type) || '');
+  return isPrefix ? (breakText + text) : (text + breakText);
+}
+
+function extractText(paragraph) {
+  return paragraph.words.map(w =>
+    addBreak(
+      w.symbols.map(s => addBreak(s.text, s.property)).join(''),
+      w.property
+    )
+  ).join('');
+}
+
+function extractParagraphs(annotations) {
+  const paragraphs = [];
+  annotations.fullTextAnnotation.pages.forEach(page => {
+    page.blocks.forEach(b => {
+      b.paragraphs.forEach(p => {
+        paragraphs.push(p);
+      });
+    });
+  });
+  return paragraphs;
+}
+
+function generateAnnotation(paragraph) {
+  const xs = paragraph.boundingBox.vertices.map(p => p.x);
+  const ys = paragraph.boundingBox.vertices.map(p => p.y);
   const x1 = Math.min.apply(Math, xs);
   const y1 = Math.min.apply(Math, ys);
   const dx = Math.max.apply(Math, xs) - x1;
   const dy = Math.max.apply(Math, ys) - y1;
-  const text = annotation.description.trim();
+  const text = extractText(paragraph).trim();
   const html = templates.annotation({x1, y1, dx, dy, text});
   return html;
 }
 
 function generateHTML(options) {
   const {hash, annotations} = options;
-  const annotationsHTML = annotations.textAnnotations.map(generateAnnotation).join('\n');
+  const annotationsHTML = extractParagraphs(annotations).map(generateAnnotation).join('\n');
   const html = templates.html({hash, annotationsHTML});
   return html;
 }
