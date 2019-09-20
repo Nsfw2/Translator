@@ -8,7 +8,7 @@ const templates = {
 <link href="../css/results.css" rel="stylesheet">
 </head><body>
 <div class="image-container">
-<img src="<%- hash %>.<%- extension %>">
+<img src="<%- hash %>">
 <%= annotationsHTML %>
 </div>
 </body></html>
@@ -34,9 +34,9 @@ function generateAnnotation(annotation) {
 }
 
 function generateHTML(options) {
-  const {hash, extension, annotations} = options;
+  const {hash, annotations} = options;
   annotationsHTML = annotations.map(generateAnnotation).join('\n');
-  const html = templates.html({hash, extension, annotationsHTML});
+  const html = templates.html({hash, annotationsHTML});
   return html;
 }
 
@@ -49,12 +49,11 @@ async function test() {
   const ocr = require('./ocr');
 
   const filename = '../sample/wakeupcat.jpg';
-  const extension = 'jpg';
 
   const imageData = await fsPromises.readFile(filename);
-  const hash = await tempfile.writeHash(extension, imageData);
-  const annotations = await ocr.write(hash, extension);
-  return writeHTML({annotations, hash, extension});
+  const hash = await tempfile.writeHash(imageData);
+  const annotations = await ocr.write(hash);
+  return writeHTML({annotations, hash});
 }
 
 test();

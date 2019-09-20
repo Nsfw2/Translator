@@ -46,9 +46,9 @@ function getHash(data) {
   return hash.digest('hex');
 }
 
-async function writeHash(extension, contents) {
+async function writeHash(contents) {
   const hash = getHash(contents);
-  await write(`${hash}.${extension}`, contents);
+  await write(hash, contents);
   return hash;
 }
 

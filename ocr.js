@@ -10,10 +10,10 @@ async function request(filename) {
   return result.textAnnotations;
 }
 
-async function write(hash, extension) {
+async function write(hash) {
   var annotations = tempfile.write(
     `${hash}.json`,
-    () => request(`${hash}.${extension}`),
+    () => request(hash),
     JSON.stringify
   );
   if (!annotations) {
