@@ -45,9 +45,15 @@ async function writeHTML(options) {
 }
 
 async function test() {
-  const hash = '11ab77154e52e621cbeecb91e667b03e3d6f6ba7513717f59f11e4a0a956cf31a45fd7474adb5c2c3d588a8d67032e8e2b7b06242b6b3ab5df8a276b0c2f9cbd';
+  const fsPromises = require('fs').promises;
+  const ocr = require('./ocr');
+
+  const filename = '../sample/wakeupcat.jpg';
   const extension = 'jpg';
-  const annotations = JSON.parse(await tempfile.read(`${hash}.json`, {encoding: 'utf8'}));
+
+  const imageData = await fsPromises.readFile(filename);
+  const hash = await tempfile.writeHash(extension, imageData);
+  const annotations = await ocr.write(hash, extension);
   return writeHTML({annotations, hash, extension});
 }
 
