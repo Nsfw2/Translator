@@ -12,7 +12,7 @@
   height: 0;
 }
 .annotation:not(:hover) > .annotation-tooltip-root {
-  display: none;
+  visibility: hidden;
 }
 .annotation-tooltip {
   position: relative;
