@@ -48,12 +48,18 @@ async function test() {
   const fsPromises = require('fs').promises;
   const ocr = require('./ocr');
 
-  const filename = '../sample/wakeupcat.jpg';
+  async function handleFile(filename) {
+    const imageData = await fsPromises.readFile(filename);
+    const hash = await tempfile.writeHash(imageData);
+    const annotations = await ocr.write(hash);
+    return writeHTML({annotations, hash});
+  }
 
-  const imageData = await fsPromises.readFile(filename);
-  const hash = await tempfile.writeHash(imageData);
-  const annotations = await ocr.write(hash);
-  return writeHTML({annotations, hash});
+  Promise.all(
+    process.argv.slice(2).map(filename =>
+      handleFile(filename).catch(console.error)
+    )
+  );
 }
 
 test();
