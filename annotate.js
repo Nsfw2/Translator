@@ -61,7 +61,7 @@ function extractParagraphs(annotations) {
 }
 
 function generateAnnotation(paragraph) {
-  if (!paragraph.boundingBox || !paragraph.boundingBox.vertices) return '';
+  if (!paragraph.boundingBox || !paragraph.boundingBox.vertices || !paragraph.boundingBox.vertices.length) return '';
   const {vertices} = paragraph.boundingBox;
   const xs = vertices.map(p => p.x);
   const ys = vertices.map(p => p.y);
