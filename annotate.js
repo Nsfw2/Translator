@@ -22,12 +22,15 @@ const templates = {
 <svg class="outline" style="z-index: <%- z1 %>; width: <%- dx %>px; height: <%- dy %>px;" viewbox="0 0 <%- dx %> <%- dy %>" xmlns="http://www.w3.org/2000/svg">
 <polygon points="<%- points %>" fill="currentColor" stroke="black" />
 </svg>
-<div class="tooltip-root" style="width: <%- dx %>px; top: <%- dy %>px;"><div class="tooltip"><%- text %></div></div>
+<div class="tooltip-root" style="width: <%- dx %>px; top: <%- dy %>px;"><div class="tooltip">
+<div class="translation"><%- translation %></div>
+<div class="original"><%- text %></div>
+</div></div>
 </div>`
   )
 };
 
-function generateAnnotation({text, vertices}) {
+function generateAnnotation({translation, text, vertices}) {
   const xs = vertices.map(p => p.x);
   const ys = vertices.map(p => p.y);
   const zs = vertices.map(p => p.x + p.y);
@@ -37,7 +40,7 @@ function generateAnnotation({text, vertices}) {
   const dx = Math.max.apply(Math, xs) - x1;
   const dy = Math.max.apply(Math, ys) - y1;
   const points = vertices.map(p => `${p.x - x1},${p.y - y1}`).join(' ');
-  return {z1, x1, y1, dx, dy, points, text};
+  return {z1, x1, y1, dx, dy, points, translation, text};
 }
 
 function generateHTML(options) {
