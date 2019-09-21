@@ -1,32 +1,37 @@
 const _ = require('lodash');
 const tempfile = require('./tempfile');
 
+function makeTemplate(text) {
+  return _.template(text.replace(/\n\s*/g, ''));
+}
+
 const templates = {
-  html: _.template(
-    `<!doctype html><head>
-<meta charset="UTF-8">
-<title>Translation results</title>
-<link href="results.css" rel="stylesheet">
-</head><body>
-<div class="image-container">
-<img src="<%- hash %>">
-<div class="annotation-container">
-<%= annotationsHTML %>
-</div>
-</div>
-</body></html>
-`
-  ),
-  annotation: _.template(
-    `<div class="annotation" style="left: <%- x1 %>px; top: <%- y1 %>px;" tabindex="0">
-<svg class="outline" style="z-index: <%- z1 %>; width: <%- dx %>px; height: <%- dy %>px;" viewbox="0 0 <%- dx %> <%- dy %>" xmlns="http://www.w3.org/2000/svg">
-<polygon points="<%- points %>" fill="currentColor" stroke="black" />
-</svg>
-<div class="tooltip-root" style="width: <%- dx %>px; top: <%- dy %>px;">
-<div class="tooltip"><div class="translation"><%- translation %></div><div class="original"><%- text %></div><a href="https://translate.google.com/#<%- linkParams %>" target="_blank">open in Google Translate</a></div>
-</div>
-</div>`
-  )
+  html: makeTemplate(`
+    <!doctype html><head>
+      <meta charset="UTF-8">
+      <title>Translation results</title>
+      <link href="results.css" rel="stylesheet">
+    </head><body>
+      <div class="image-container">
+        <img src="<%- hash %>">
+        <div class="annotation-container">
+          <%= annotationsHTML %>
+        </div>
+      </div>
+    </body></html>
+  `),
+  annotation: makeTemplate(`
+    <div class="annotation" style="left: <%- x1 %>px; top: <%- y1 %>px;" tabindex="0">
+      <svg class="outline" style="z-index: <%- z1 %>; width: <%- dx %>px; height: <%- dy %>px;" viewbox="0 0 <%- dx %> <%- dy %>" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="<%- points %>" fill="currentColor" stroke="black" />
+      </svg>
+      <div class="tooltip-root" style="width: <%- dx %>px; top: <%- dy %>px;"><div class="tooltip">
+        <div class="translation"><%- translation %></div>
+        <div class="original"><%- text %></div>
+        <a href="https://translate.google.com/#<%- linkParams %>" target="_blank">open in Google Translate</a>
+      </div></div>
+    </div>
+  `)
 };
 
 function generateAnnotation({translation, text, vertices, srcLang, destLang}) {
@@ -50,7 +55,7 @@ function generateHTML(options) {
   annotationsData.forEach(o => {
     o.z1 = zs.indexOf(o.z1) - zs.length;
   });
-  const annotationsHTML = annotationsData.map(templates.annotation).join('\n');
+  const annotationsHTML = annotationsData.map(templates.annotation).join('');
   const html = templates.html({hash, annotationsHTML});
   return html;
 }
