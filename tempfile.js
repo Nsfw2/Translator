@@ -11,11 +11,15 @@ async function read(filename, options) {
   return fsPromises.readFile(path(filename), options);
 }
 
+async function mkdir() {
+  return fsPromises.mkdir(outputPath, {recursive: true});
+}
+
 const writers = new Map();
 
 async function write(filename, makeContents, encodeContents) {
   const fullname = path(filename);
-  await fsPromises.mkdir(outputPath, {recursive: true});
+  await mkdir();
   var writer = writers.get(filename);
   if (!writer) {
     var file;
@@ -61,4 +65,13 @@ async function cacheJSON(filename, makeContents) {
   return data;
 }
 
-module.exports = {path, read, write, getHash, writeHash, cacheJSON};
+async function symlink(target, filename) {
+  await mkdir();
+  try {
+    await fsPromises.symlink(`../${target}`, path(filename));
+  } catch(err) {
+    if (err.code !== 'EEXIST') throw err;
+  }
+}
+
+module.exports = {path, read, write, getHash, writeHash, cacheJSON, symlink};

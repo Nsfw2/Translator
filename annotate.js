@@ -6,7 +6,7 @@ const templates = {
     `<!doctype html><head>
 <meta charset="UTF-8">
 <title>Translation results</title>
-<link href="../css/results.css" rel="stylesheet">
+<link href="results.css" rel="stylesheet">
 </head><body>
 <div class="image-container">
 <img src="<%- hash %>">

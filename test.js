@@ -5,6 +5,19 @@ const translate = require('./translate');
 const annotate = require('./annotate');
 
 const samplePath = '../sample';
+const webPath = 'web';
+
+async function parallel(tasks) {
+  return Promise.all(tasks.map(task =>
+    task.catch(console.error)
+  ));
+}
+
+async function listFiles(path) {
+  const entries = await fsPromises.readdir(path, {withFileTypes: true});
+  const filenames = entries.filter(x => x.isFile()).map(x => x.name);
+  return filenames;
+}
 
 async function handleFile(filename) {
   const imageData = await fsPromises.readFile(filename);
@@ -14,14 +27,25 @@ async function handleFile(filename) {
   return annotate.writeHTML({annotations, hash});
 }
 
+async function writeHTML() {
+  const filenames = await listFiles(samplePath);
+  return parallel(filenames.map(f =>
+    handleFile(`${samplePath}/${f}`)
+  ));
+}
+
+async function makeLinks() {
+  const filenames = await listFiles(webPath);
+  return parallel(filenames.map(f =>
+    tempfile.symlink(`${webPath}/${f}`, f)
+  ));
+}
+
 async function test() {
-  const entries = await fsPromises.readdir(samplePath, {withFileTypes: true});
-  const filenames = entries.filter(x => x.isFile()).map(x => `${samplePath}/${x.name}`);
-  return Promise.all(
-    filenames.map(filename =>
-      handleFile(filename).catch(console.error)
-    )
-  );
+  return parallel([
+    writeHTML(),
+    makeLinks()
+  ]);
 }
 
 test();
