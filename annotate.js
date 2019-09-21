@@ -60,8 +60,16 @@ function extractParagraphs(annotations) {
   return paragraphs;
 }
 
+function validateBox(obj) {
+  return !!(obj.boundingBox && obj.boundingBox.vertices && obj.boundingBox.vertices.length);
+}
+
+function orderBox(obj) {
+  const zs = obj.boundingBox.vertices.map(p => p.x + p.y);
+  return Math.min.apply(Math, zs);
+}
+
 function generateAnnotation(paragraph) {
-  if (!paragraph.boundingBox || !paragraph.boundingBox.vertices || !paragraph.boundingBox.vertices.length) return '';
   const {vertices} = paragraph.boundingBox;
   const xs = vertices.map(p => p.x);
   const ys = vertices.map(p => p.y);
@@ -78,7 +86,13 @@ function generateAnnotation(paragraph) {
 
 function generateHTML(options) {
   const {hash, annotations} = options;
-  const annotationsHTML = extractParagraphs(annotations).map(generateAnnotation).join('\n');
+  const annotationsHTML = (
+    extractParagraphs(annotations)
+      .filter(validateBox)
+      .sort((x, y) => orderBox(x) - orderBox(y))
+      .map(generateAnnotation)
+      .join('\n')
+  );
   const html = templates.html({hash, annotationsHTML});
   return html;
 }
