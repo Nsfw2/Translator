@@ -1,6 +1,12 @@
 .image-container {
   position: relative;
 }
+.annotation-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 0;
+}
 .outline {
   position: absolute;
   pointer-events: none;
