@@ -45,7 +45,10 @@
   background: white;
   border: 1px solid black;
   font-family: sans-serif;
-  padding: 2px;
+  padding: .25em;
   white-space: pre;
   z-index: 1;
+}
+.original {
+  margin-top: .5em;
 }
