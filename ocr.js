@@ -11,15 +11,10 @@ async function request(filename) {
 }
 
 async function write(hash) {
-  var annotations = await tempfile.write(
+  const annotations = await tempfile.cacheJSON(
     `${hash}.json`,
-    () => request(hash),
-    JSON.stringify
+    () => request(hash)
   );
-  if (!annotations) {
-    annotations = await tempfile.read(`${hash}.json`, {encoding: 'utf8'});
-    annotations = JSON.parse(annotations);
-  }
   return processParagraphs(annotations);
 }
 

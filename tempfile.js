@@ -52,4 +52,13 @@ async function writeHash(contents) {
   return hash;
 }
 
-module.exports = {path, read, write, writeHash};
+async function cacheJSON(filename, makeContents) {
+  var data = await write(filename, makeContents, JSON.stringify);
+  if (!data) {
+    data = await read(filename, {encoding: 'utf8'});
+    data = JSON.parse(data);
+  }
+  return data;
+}
+
+module.exports = {path, read, write, writeHash, cacheJSON};
