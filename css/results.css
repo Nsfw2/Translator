@@ -26,12 +26,19 @@
 .outline > polygon {
   pointer-events: fill;
 }
-.annotation:not(:hover):not(:focus) > .tooltip {
+.annotation:not(:hover):not(:focus) > .tooltip-root {
   visibility: hidden;
+}
+.tooltip-root {
+  position: absolute;
+  left: 0;
+  height: 18px;
+  margin-top: -12px;
 }
 .tooltip {
   position: absolute;
-  margin-top: 6px;
+  left: 0;
+  top: 100%;
   background: white;
   border: 1px solid black;
   font-family: sans-serif;

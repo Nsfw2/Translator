@@ -22,7 +22,7 @@ const templates = {
 <svg class="outline" style="z-index: <%- z1 %>; width: <%- dx %>px; height: <%- dy %>px;" viewbox="0 0 <%- dx %> <%- dy %>" xmlns="http://www.w3.org/2000/svg">
 <polygon points="<%- points %>" fill="currentColor" stroke="black" />
 </svg>
-<div class="tooltip" style="left: 0px; top: <%- dy %>px;"><%- text %></div>
+<div class="tooltip-root" style="width: <%- dx %>px; top: <%- dy %>px;"><div class="tooltip"><%- text %></div></div>
 </div>`
   )
 };
