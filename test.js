@@ -13,12 +13,6 @@ async function parallel(tasks) {
   ));
 }
 
-async function listFiles(path) {
-  const entries = await fsPromises.readdir(path, {withFileTypes: true});
-  const filenames = entries.filter(x => x.isFile()).map(x => x.name);
-  return filenames;
-}
-
 async function handleFile(filename) {
   const imageData = await fsPromises.readFile(filename);
   const hash = await tempfile.writeHash(imageData);
@@ -28,14 +22,14 @@ async function handleFile(filename) {
 }
 
 async function writeHTML() {
-  const filenames = await listFiles(samplePath);
+  const filenames = await fsPromises.readdir(samplePath);
   return parallel(filenames.map(f =>
     handleFile(`${samplePath}/${f}`)
   ));
 }
 
 async function makeLinks() {
-  const filenames = await listFiles(webPath);
+  const filenames = await fsPromises.readdir(webPath);
   return parallel(filenames.map(f =>
     tempfile.symlink(`${webPath}/${f}`, f)
   ));
