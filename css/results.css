@@ -7,20 +7,26 @@
   top: 0;
   z-index: 0;
 }
-.outline {
+.annotation {
   position: absolute;
+  width: 0;
+  height: 0;
+}
+.annotation:focus {
+  outline: none;
+}
+.outline {
   pointer-events: none;
   color: transparent;
 }
-.outline:hover,
-.outline:focus {
+.annotation:hover > .outline,
+.annotation:focus > .outline {
   color: rgba(255,255,0,.1);
-  outline: none;
 }
 .outline > polygon {
   pointer-events: fill;
 }
-.outline:not(:hover):not(:focus) + .tooltip {
+.annotation:not(:hover):not(:focus) > .tooltip {
   visibility: hidden;
 }
 .tooltip {
