@@ -15,7 +15,8 @@ async function write(annotations, target) {
   translations[1].data.translations.forEach((result, i) => {
     if (annotations[i]) {
       annotations[i].translation = result.translatedText;
-      annotations[i].language = result.detectedSourceLanguage;
+      annotations[i].srcLang = result.detectedSourceLanguage;
+      annotations[i].destLang = target;
     }
   });
   return annotations;
