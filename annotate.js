@@ -28,7 +28,7 @@ const templates = {
       <div class="tooltip-root" style="width: <%- dx %>px; top: <%- dy %>px;"><div class="tooltip">
         <div class="translation"><%- translation %></div>
         <div class="original"><%- text %></div>
-        <a href="https://translate.google.com/#<%- linkParams %>" target="_blank">open in Google Translate</a>
+        <a href="https://translate.google.com/#<%- linkParams %>" target="_blank" rel="noopener">open in Google Translate</a>
       </div></div>
     </div>
   `)
