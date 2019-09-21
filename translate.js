@@ -12,8 +12,11 @@ async function write(annotations, target) {
     `${hash}.t.${target}.json`,
     () => client.translate(text, target)
   );
-  translations[0].forEach((result, i) => {
-    if (annotations[i]) annotations[i].translation = result;
+  translations[1].data.translations.forEach((result, i) => {
+    if (annotations[i]) {
+      annotations[i].translation = result.translatedText;
+      annotations[i].language = result.detectedSourceLanguage;
+    }
   });
   return annotations;
 }
