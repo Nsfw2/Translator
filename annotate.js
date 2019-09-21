@@ -18,8 +18,8 @@ const templates = {
 `
   ),
   annotation: _.template(
-    `<svg class="outline" style="z-index: <%- z1 %>; left: <%- x1 %>px; top: <%- y1 %>px; width: <%- dx %>px; height: <%- dy %>px;" viewbox="0 0 <%- dx %> <%- dy %>" xmlns="http://www.w3.org/2000/svg">
-<polygon points="<%- points %>" fill="none" stroke="black" />
+    `<svg class="outline" style="z-index: <%- z1 %>; left: <%- x1 %>px; top: <%- y1 %>px; width: <%- dx %>px; height: <%- dy %>px;" tabindex="0" viewbox="0 0 <%- dx %> <%- dy %>" xmlns="http://www.w3.org/2000/svg">
+<polygon points="<%- points %>" fill="currentColor" stroke="black" />
 </svg>
 <div class="tooltip" style="left: <%- x1 %>px; top: <%- yt %>px;"><%- text %></div>`
   )

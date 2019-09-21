@@ -10,11 +10,17 @@
 .outline {
   position: absolute;
   pointer-events: none;
+  color: transparent;
+}
+.outline:hover,
+.outline:focus {
+  color: rgba(255,255,0,.1);
+  outline: none;
 }
 .outline > polygon {
   pointer-events: fill;
 }
-.outline:not(:hover) + .tooltip {
+.outline:not(:hover):not(:focus) + .tooltip {
   visibility: hidden;
 }
 .tooltip {
