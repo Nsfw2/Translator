@@ -27,55 +27,6 @@ const templates = {
   )
 };
 
-const breaksAsText = new Map([
-  ['UNKNOWN', ''],
-  ['SPACE', ' '],
-  ['SURE_SPACE', ' '],
-  ['EOL_SURE_SPACE', '\n'],
-  ['HYPHEN', '\n'],
-  ['LINE_BREAK', '\n']
-]);
-
-function addBreak(text, property) {
-  if (!property || !property.detectedBreak) return text;
-  const {type, isPrefix} = property.detectedBreak;
-  const breakText = (breaksAsText.get(type) || '');
-  return isPrefix ? (breakText + text) : (text + breakText);
-}
-
-function extractText(paragraph) {
-  return (paragraph.words || []).map(w =>
-    addBreak(
-      (w.symbols || []).map(s => addBreak(s.text, s.property)).join(''),
-      w.property
-    )
-  ).join('').trim();
-}
-
-function extractParagraphs(annotations) {
-  const paragraphs = [];
-  ((annotations.fullTextAnnotation || {}).pages || []).forEach(page => {
-    (page.blocks || []).forEach(b => {
-      (b.paragraphs || []).forEach(p => {
-        paragraphs.push(p);
-      });
-    });
-  });
-  return paragraphs;
-}
-
-function processParagraphs(annotations) {
-  return (
-    extractParagraphs(annotations)
-      .filter(validateBox)
-      .map(p => ({text: extractText(p), vertices: p.boundingBox.vertices}))
-  );
-}
-
-function validateBox(obj) {
-  return !!(obj.boundingBox && obj.boundingBox.vertices && obj.boundingBox.vertices.length);
-}
-
 function generateAnnotation({text, vertices}) {
   const xs = vertices.map(p => p.x);
   const ys = vertices.map(p => p.y);
@@ -91,7 +42,7 @@ function generateAnnotation({text, vertices}) {
 
 function generateHTML(options) {
   const {hash, annotations} = options;
-  const annotationsData = processParagraphs(annotations).map(generateAnnotation);
+  const annotationsData = annotations.map(generateAnnotation);
   const zs = annotationsData.map(o => o.z1).sort((a, b) => a - b);
   annotationsData.forEach(o => {
     o.z1 = zs.indexOf(o.z1) - zs.length;
