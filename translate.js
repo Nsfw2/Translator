@@ -6,7 +6,7 @@ const client = new Translate({
 });
 
 async function write(annotations, target) {
-  const text = annotations.map(x => x.text);
+  const text = annotations.map(x => x.text.replace(/\n/g, ' '));
   const hash = tempfile.getHash(JSON.stringify(text));
   const translations = await tempfile.cacheJSON(
     `${hash}.t.${target}.json`,
