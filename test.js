@@ -1,6 +1,7 @@
 const fsPromises = require('fs').promises;
 const tempfile = require('./tempfile');
 const ocr = require('./ocr');
+const translate = require('./translate');
 const annotate = require('./annotate');
 
 const samplePath = '../sample';
@@ -9,6 +10,7 @@ async function handleFile(filename) {
   const imageData = await fsPromises.readFile(filename);
   const hash = await tempfile.writeHash(imageData);
   const annotations = await ocr.write(hash);
+  await translate.write(annotations, 'en');
   return annotate.writeHTML({annotations, hash});
 }
 

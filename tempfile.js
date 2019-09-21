@@ -61,4 +61,4 @@ async function cacheJSON(filename, makeContents) {
   return data;
 }
 
-module.exports = {path, read, write, writeHash, cacheJSON};
+module.exports = {path, read, write, getHash, writeHash, cacheJSON};
