@@ -49,7 +49,7 @@ function extractText(paragraph) {
       (w.symbols || []).map(s => addBreak(s.text, s.property)).join(''),
       w.property
     )
-  ).join('');
+  ).join('').trim();
 }
 
 function extractParagraphs(annotations) {
@@ -64,12 +64,19 @@ function extractParagraphs(annotations) {
   return paragraphs;
 }
 
+function processParagraphs(annotations) {
+  return (
+    extractParagraphs(annotations)
+      .filter(validateBox)
+      .map(p => ({text: extractText(p), vertices: p.boundingBox.vertices}))
+  );
+}
+
 function validateBox(obj) {
   return !!(obj.boundingBox && obj.boundingBox.vertices && obj.boundingBox.vertices.length);
 }
 
-function generateAnnotation(paragraph) {
-  const {vertices} = paragraph.boundingBox;
+function generateAnnotation({text, vertices}) {
   const xs = vertices.map(p => p.x);
   const ys = vertices.map(p => p.y);
   const zs = vertices.map(p => p.x + p.y);
@@ -79,17 +86,12 @@ function generateAnnotation(paragraph) {
   const dx = Math.max.apply(Math, xs) - x1;
   const dy = Math.max.apply(Math, ys) - y1;
   const points = vertices.map(p => `${p.x - x1},${p.y - y1}`).join(' ');
-  const text = extractText(paragraph).trim();
   return {z1, x1, y1, dx, dy, points, text};
 }
 
 function generateHTML(options) {
   const {hash, annotations} = options;
-  const annotationsData = (
-    extractParagraphs(annotations)
-      .filter(validateBox)
-      .map(generateAnnotation)
-  );
+  const annotationsData = processParagraphs(annotations).map(generateAnnotation);
   const zs = annotationsData.map(o => o.z1).sort((a, b) => a - b);
   annotationsData.forEach(o => {
     o.z1 = zs.indexOf(o.z1) - zs.length;
