@@ -12,7 +12,7 @@ async function request(filename) {
 
 async function write(hash) {
   const annotations = await tempfile.cacheJSON(
-    `${hash}.json`,
+    `${hash}.o.json`,
     () => request(hash)
   );
   return processParagraphs(annotations);
