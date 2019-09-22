@@ -31,7 +31,9 @@ const templates = {
       <div class="tooltip-root"><div class="tooltip">
         <div class="translation"><%= translationHTML %></div>
         <div class="original"><%= textHTML %></div>
-        <a href="https://translate.google.com/#<%- linkParams %>" target="_blank" rel="noopener" onclick="openGoogleTranslate(event)">open in Google Translate</a>
+        <div class="small">
+          <span>(<%- srcLang %> \u2192 <%- destLang %>)</span> <a href="https://translate.google.com/#<%- linkParams %>" target="_blank" rel="noopener" onclick="openGoogleTranslate(event)">open in Google Translate</a>
+        </div>
       </div></div>
     </label>
   `)
@@ -54,7 +56,7 @@ function generateAnnotation({translation, text, vertices, srcLang, destLang}) {
   const translationHTML = escapeBR(translation);
   const textHTML = escapeBR(text);
   const linkParams = [srcLang, destLang, text.replace(/\n/g, ' ')].map(encodeURIComponent).join('|');
-  return {z1, x1, y1, dx, dy, points, translationHTML, textHTML, linkParams};
+  return {z1, x1, y1, dx, dy, points, translationHTML, textHTML, srcLang, destLang, linkParams};
 }
 
 function generateHTML(options) {

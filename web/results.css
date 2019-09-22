@@ -64,6 +64,6 @@
   display: block;
   padding: 4px;
 }
-.tooltip > a {
+.small {
   font-size: 75%;
 }
