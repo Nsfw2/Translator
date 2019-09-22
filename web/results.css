@@ -1,4 +1,4 @@
-.annotation-unselect-body {
+.annotation-reset-body {
   position: fixed;
   left: 0;
   top: 0;
@@ -8,25 +8,25 @@
 .image-container {
   position: absolute;
 }
-[name=annotation-select] {
-  position: absolute;
-  pointer-events: none;
-  opacity: 0;
-  visibility: visible;
-  height: 100%;
-}
-[name=annotation-select]:focus + img {
-  outline: 1px dotted #212121;
-}
 .annotation-container {
   position: absolute;
   left: 0;
   top: 0;
   z-index: 0;
 }
+#annotation-reset {
+  display: none;
+}
 .annotation {
   position: absolute;
   visibility: hidden;
+}
+[name=annotation-select] {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+  visibility: visible;
+  height: 100%;
 }
 .outline {
   position: relative;

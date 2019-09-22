@@ -13,15 +13,15 @@ const templates = {
       <link href="results.css" rel="stylesheet">
       <script src="results.js"></script>
     </head><body>
-      <label class="annotation-unselect-body" for="annotation-unselect"></label>
+      <label class="annotation-reset-body" for="annotation-reset"></label>
       <div class="image-container">
-        <label class="annotation-unselect-label">
-          <input id="annotation-unselect" name="annotation-select" type="radio" checked>
+        <label for="annotation-reset">
           <img src="<%- hash %>">
         </label>
-        <div class="annotation-container">
+        <form class="annotation-container">
           <%= annotationsHTML %>
-        </div>
+          <input id="annotation-reset" type="reset">
+        </form>
       </div>
     </body></html>
   `),
