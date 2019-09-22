@@ -14,7 +14,7 @@ const templates = {
     </head><body>
       <div class="image-container">
         <img src="<%- hash %>">
-        <label class="annotation-unselect"><input name="annotation-select" type="radio" checked></label>
+        <label class="annotation-unselect"><input name="annotation-select" type="radio" checked><div></div></label>
         <div class="annotation-container">
           <%= annotationsHTML %>
         </div>
