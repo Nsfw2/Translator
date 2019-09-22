@@ -1,15 +1,14 @@
 .image-container {
   position: absolute;
 }
-.annotation-unselect,
-.annotation-unselect > div {
+[name=annotation-select] {
   position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
+  pointer-events: none;
+  opacity: 0;
+  visibility: visible;
+  height: 100%;
 }
-.annotation-unselect > input:focus + div {
+[name=annotation-select]:focus + img {
   outline: 1px dotted #212121;
 }
 .annotation-container {
@@ -21,13 +20,6 @@
 .annotation {
   position: absolute;
   visibility: hidden;
-}
-[name=annotation-select] {
-  position: absolute;
-  pointer-events: none;
-  opacity: 0;
-  visibility: visible;
-  height: 100%;
 }
 .outline {
   position: relative;

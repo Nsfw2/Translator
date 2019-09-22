@@ -14,8 +14,10 @@ const templates = {
       <script src="results.js"></script>
     </head><body>
       <div class="image-container">
-        <img src="<%- hash %>">
-        <label class="annotation-unselect"><input name="annotation-select" type="radio" checked><div></div></label>
+        <label class="annotation-unselect-label">
+          <input name="annotation-select" type="radio" checked>
+          <img src="<%- hash %>">
+        </label>
         <div class="annotation-container">
           <%= annotationsHTML %>
         </div>
