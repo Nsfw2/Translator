@@ -29,13 +29,17 @@ const templates = {
         <polygon points="<%- points %>" fill="currentColor" stroke="black" />
       </svg>
       <div class="tooltip-root"><div class="tooltip">
-        <div class="translation"><%- translation %></div>
-        <div class="original"><%- text %></div>
+        <div class="translation"><%= translationHTML %></div>
+        <div class="original"><%= textHTML %></div>
         <a href="https://translate.google.com/#<%- linkParams %>" target="_blank" rel="noopener" onclick="openGoogleTranslate(event)">open in Google Translate</a>
       </div></div>
     </label>
   `)
 };
+
+function escapeBR(text) {
+  return _.escape(text).replace(/\n/g, '<br>');
+}
 
 function generateAnnotation({translation, text, vertices, srcLang, destLang}) {
   const xs = vertices.map(p => p.x);
@@ -47,8 +51,10 @@ function generateAnnotation({translation, text, vertices, srcLang, destLang}) {
   const dx = Math.max.apply(Math, xs) - x1;
   const dy = Math.max.apply(Math, ys) - y1;
   const points = vertices.map(p => `${p.x - x1},${p.y - y1}`).join(' ');
+  const translationHTML = escapeBR(translation);
+  const textHTML = escapeBR(text);
   const linkParams = [srcLang, destLang, text.replace(/\n/g, ' ')].map(encodeURIComponent).join('|');
-  return {z1, x1, y1, dx, dy, points, translation, text, linkParams};
+  return {z1, x1, y1, dx, dy, points, translationHTML, textHTML, linkParams};
 }
 
 function generateHTML(options) {
