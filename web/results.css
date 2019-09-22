@@ -35,15 +35,15 @@
   pointer-events: none;
   color: transparent;
 }
-.annotation:hover > .outline {
-  color: rgba(255,255,0,.1);
-}
-[name=annotation-select]:focus ~ .outline {
-  color: rgba(255,255,0,.3);
-  stroke-width: 3px;
-}
 .outline > polygon {
   pointer-events: fill;
+}
+.annotation:hover > .outline > polygon {
+  fill: rgba(255,255,0,.1);
+}
+[name=annotation-select]:focus ~ .outline > polygon {
+  fill: rgba(255,255,0,.3);
+  stroke-width: 3px;
 }
 .annotation:hover > .tooltip-root,
 [name=annotation-select]:checked ~ .tooltip-root {

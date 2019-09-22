@@ -25,8 +25,8 @@ const templates = {
   annotation: makeTemplate(`
     <label class="annotation" style="left: <%- x1 %>px; top: <%- y1 %>px;">
       <input name="annotation-select" type="radio">
-      <svg class="outline" style="z-index: <%- z1 %>; width: <%- dx %>px; height: <%- dy %>px;" viewbox="0 0 <%- dx %> <%- dy %>" xmlns="http://www.w3.org/2000/svg">
-        <polygon points="<%- points %>" fill="currentColor" stroke="black" />
+      <svg class="outline" style="z-index: <%- z1 %>;" width="<%- dx %>" height="<%- dy %>" viewbox="0 0 <%- dx %> <%- dy %>" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="<%- points %>" fill="none" stroke="black" />
       </svg>
       <div class="tooltip-root"><div class="tooltip">
         <div class="translation"><%= translationHTML %></div>
