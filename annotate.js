@@ -11,6 +11,7 @@ const templates = {
       <meta charset="UTF-8">
       <title>Translation results</title>
       <link href="results.css" rel="stylesheet">
+      <script src="results.js"></script>
     </head><body>
       <div class="image-container">
         <img src="<%- hash %>">
@@ -30,7 +31,7 @@ const templates = {
       <div class="tooltip-root"><div class="tooltip">
         <div class="translation"><%- translation %></div>
         <div class="original"><%- text %></div>
-        <a href="https://translate.google.com/#<%- linkParams %>" target="_blank" rel="noopener">open in Google Translate</a>
+        <a href="https://translate.google.com/#<%- linkParams %>" target="_blank" rel="noopener" onclick="openGoogleTranslate(event)">open in Google Translate</a>
       </div></div>
     </label>
   `)
