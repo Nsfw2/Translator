@@ -1,5 +1,12 @@
 .image-container {
-  position: relative;
+  position: absolute;
+}
+.annotation-unselect {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
 }
 .annotation-container {
   position: absolute;
@@ -9,33 +16,38 @@
 }
 .annotation {
   position: absolute;
-  height: 0;
+  visibility: hidden;
 }
-.annotation:focus {
-  outline: none;
+[name=annotation-select] {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+  visibility: visible;
+  height: 100%;
 }
 .outline {
   position: relative;
+  visibility: visible;
   pointer-events: none;
   color: transparent;
 }
 .annotation:hover > .outline,
-.annotation:focus > .outline {
+[name=annotation-select]:focus ~ .outline {
   color: rgba(255,255,0,.1);
 }
 .outline > polygon {
   pointer-events: fill;
 }
-.annotation:not(:hover):not(:focus) > .tooltip-root {
-  visibility: hidden;
+.annotation:hover > .tooltip-root,
+[name=annotation-select]:checked ~ .tooltip-root {
+  visibility: visible;
 }
 .tooltip-root {
-  height: 18px;
   margin-top: -12px;
+  padding-top: 18px;
 }
 .tooltip {
   position: relative;
-  top: 100%;
   background: white;
   border: 1px solid black;
   font-family: sans-serif;

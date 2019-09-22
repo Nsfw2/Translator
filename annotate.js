@@ -14,6 +14,7 @@ const templates = {
     </head><body>
       <div class="image-container">
         <img src="<%- hash %>">
+        <label class="annotation-unselect"><input name="annotation-select" type="radio" checked></label>
         <div class="annotation-container">
           <%= annotationsHTML %>
         </div>
@@ -21,7 +22,8 @@ const templates = {
     </body></html>
   `),
   annotation: makeTemplate(`
-    <div class="annotation" style="left: <%- x1 %>px; top: <%- y1 %>px;" tabindex="0">
+    <label class="annotation" style="left: <%- x1 %>px; top: <%- y1 %>px;">
+      <input name="annotation-select" type="radio">
       <svg class="outline" style="z-index: <%- z1 %>; width: <%- dx %>px; height: <%- dy %>px;" viewbox="0 0 <%- dx %> <%- dy %>" xmlns="http://www.w3.org/2000/svg">
         <polygon points="<%- points %>" fill="currentColor" stroke="black" />
       </svg>
@@ -30,7 +32,7 @@ const templates = {
         <div class="original"><%- text %></div>
         <a href="https://translate.google.com/#<%- linkParams %>" target="_blank" rel="noopener">open in Google Translate</a>
       </div></div>
-    </div>
+    </label>
   `)
 };
 
