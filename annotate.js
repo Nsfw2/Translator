@@ -13,9 +13,10 @@ const templates = {
       <link href="results.css" rel="stylesheet">
       <script src="results.js"></script>
     </head><body>
+      <label class="annotation-unselect-body" for="annotation-unselect"></label>
       <div class="image-container">
         <label class="annotation-unselect-label">
-          <input name="annotation-select" type="radio" checked>
+          <input id="annotation-unselect" name="annotation-select" type="radio" checked>
           <img src="<%- hash %>">
         </label>
         <div class="annotation-container">
