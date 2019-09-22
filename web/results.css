@@ -38,7 +38,8 @@
 .outline > polygon {
   pointer-events: fill;
 }
-.annotation:hover > .outline > polygon {
+.annotation:hover > .outline > polygon,
+[name=annotation-select]:checked ~ .outline > polygon {
   fill: rgba(255,255,0,.1);
 }
 [name=annotation-select]:focus ~ .outline > polygon {
