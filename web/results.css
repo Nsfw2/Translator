@@ -9,16 +9,13 @@
 }
 .annotation {
   position: absolute;
-  width: 0;
   height: 0;
 }
 .annotation:focus {
   outline: none;
 }
 .outline {
-  position: absolute;
-  left: 0;
-  top: 0;
+  position: relative;
   pointer-events: none;
   color: transparent;
 }
@@ -33,14 +30,11 @@
   visibility: hidden;
 }
 .tooltip-root {
-  position: absolute;
-  left: 0;
   height: 18px;
   margin-top: -12px;
 }
 .tooltip {
-  position: absolute;
-  left: 0;
+  position: relative;
   top: 100%;
   background: white;
   border: 1px solid black;
