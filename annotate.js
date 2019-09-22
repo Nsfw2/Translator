@@ -47,8 +47,8 @@ function generateAnnotation({translation, text, vertices, srcLang, destLang}) {
   const xs = vertices.map(p => p.x);
   const ys = vertices.map(p => p.y);
   const zs = vertices.map(p => p.x + p.y);
-  const x1 = Math.min.apply(Math, xs);
-  const y1 = Math.min.apply(Math, ys);
+  const x1 = Math.max(0, Math.min.apply(Math, xs));
+  const y1 = Math.max(0, Math.min.apply(Math, ys));
   const z1 = Math.min.apply(Math, zs);
   const dx = Math.max.apply(Math, xs) - x1;
   const dy = Math.max.apply(Math, ys) - y1;
