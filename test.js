@@ -1,7 +1,5 @@
 const fsPromises = require('fs').promises;
 const cache = require('./cache');
-const ocr = require('./ocr');
-const translate = require('./translate');
 const results = require('./results');
 
 const samplePath = '../sample';
@@ -13,18 +11,12 @@ async function parallel(tasks) {
   ));
 }
 
-async function makeResults(hash, imageData) {
-  const annotations = await ocr.write(hash, imageData);
-  await translate.write(annotations, 'en');
-  return results.writeHTML({annotations, hash});
-}
-
 async function handleFile(filename) {
   const imageData = await fsPromises.readFile(filename);
   const hash = await cache.getHash(imageData);
   return parallel([
     cache.write(hash, imageData),
-    makeResults(hash, imageData)
+    cache.write(`${hash}.html`, () => results.results(hash, imageData))
   ]);
 }
 

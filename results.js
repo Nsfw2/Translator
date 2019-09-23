@@ -1,5 +1,6 @@
 const _ = require('lodash');
-const cache = require('./cache');
+const ocr = require('./ocr');
+const translate = require('./translate');
 
 function makeTemplate(text) {
   return _.template(text.replace(/\n\s*/g, ''));
@@ -77,8 +78,10 @@ function generateHTML(options) {
   return html;
 }
 
-async function writeHTML(options) {
-  return cache.write(`${options.hash}.html`, () => generateHTML(options));
+async function results(hash, imageData) {
+  const annotations = await ocr.write(hash, imageData);
+  await translate.write(annotations, 'en');
+  return generateHTML({annotations, hash});
 }
 
-module.exports = {writeHTML};
+module.exports = {results};
