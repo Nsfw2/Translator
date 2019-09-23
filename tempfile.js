@@ -1,7 +1,7 @@
 const fsPromises = require('fs').promises;
 const crypto = require('crypto');
 
-const outputPath = './results';
+const outputPath = './cache';
 
 function path(filename) {
   return `${outputPath}/${filename}`;
