@@ -5,6 +5,9 @@ const results = require('./results');
 const samplePath = '../sample';
 const staticPath = 'static';
 
+const srcLang = (process.argv[2] || 'auto');
+const destLang = (process.argv[3] || 'en');
+
 async function parallel(tasks) {
   return Promise.all(tasks.map(task =>
     task.catch(console.error)
@@ -16,7 +19,7 @@ async function handleFile(filename) {
   const hash = await cache.getHash(imageData);
   return parallel([
     cache.write(hash, imageData),
-    cache.write(`${hash}.html`, () => results.results(hash, imageData))
+    cache.write(`${hash}.${destLang}.html`, () => results.results({hash, imageData, srcLang, destLang}))
   ]);
 }
 

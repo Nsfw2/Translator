@@ -5,18 +5,18 @@ const client = new Translate({
   keyFilename: '../keys/google_application_credentials.json'
 });
 
-async function translate(annotations, target) {
+async function translate({annotations, destLang}) {
   const text = annotations.map(x => x.text.replace(/\n/g, ' '));
   const hash = cache.getHash(JSON.stringify(text));
   const translations = await cache.writeJSON(
-    `${hash}.t.${target}.json`,
-    () => client.translate(text, target)
+    `${hash}.t.${destLang}.json`,
+    () => client.translate(text, destLang)
   );
   translations[1].data.translations.forEach((result, i) => {
     if (annotations[i]) {
       annotations[i].translation = result.translatedText;
       annotations[i].srcLang = result.detectedSourceLanguage;
-      annotations[i].destLang = target;
+      annotations[i].destLang = destLang;
     }
   });
   return annotations;

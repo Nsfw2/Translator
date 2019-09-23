@@ -78,9 +78,9 @@ function generateHTML(options) {
   return html;
 }
 
-async function results(hash, imageData) {
-  const annotations = await ocr.ocr(hash, imageData);
-  await translate.translate(annotations, 'en');
+async function results({hash, imageData, srcLang, destLang}) {
+  const annotations = await ocr.ocr({hash, imageData, srcLang});
+  await translate.translate({annotations, srcLang, destLang});
   return generateHTML({annotations, hash});
 }
 

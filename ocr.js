@@ -10,7 +10,7 @@ async function request(imageData) {
   return result;
 }
 
-async function ocr(hash, imageData) {
+async function ocr({hash, imageData}) {
   const annotations = await cache.writeJSON(
     `${hash}.o.json`,
     () => request(imageData)
