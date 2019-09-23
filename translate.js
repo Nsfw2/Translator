@@ -5,7 +5,7 @@ const client = new Translate({
   keyFilename: '../keys/google_application_credentials.json'
 });
 
-async function write(annotations, target) {
+async function translate(annotations, target) {
   const text = annotations.map(x => x.text.replace(/\n/g, ' '));
   const hash = cache.getHash(JSON.stringify(text));
   const translations = await cache.writeJSON(
@@ -22,4 +22,4 @@ async function write(annotations, target) {
   return annotations;
 }
 
-module.exports = {write};
+module.exports = {translate};

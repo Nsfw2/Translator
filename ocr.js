@@ -10,7 +10,7 @@ async function request(imageData) {
   return result;
 }
 
-async function write(hash, imageData) {
+async function ocr(hash, imageData) {
   const annotations = await cache.writeJSON(
     `${hash}.o.json`,
     () => request(imageData)
@@ -67,4 +67,4 @@ function processParagraphs(annotations) {
   );
 }
 
-module.exports = {write};
+module.exports = {ocr};
