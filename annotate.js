@@ -35,7 +35,10 @@ const templates = {
         <div class="translation"><%= translationHTML %></div>
         <div class="original"><%= textHTML %></div>
         <div class="small">
-          <span>(<%- srcLang %> \u2192 <%- destLang %>)</span> <a href="https://translate.google.com/#<%- linkParams %>" target="_blank" rel="noopener" onclick="openGoogleTranslate(event)">open in Google Translate</a>
+          <img src="translated-by-google.png"><span> (<%- srcLang %> \u2192 <%- destLang %>)</span>
+        </div>
+        <div class="small">
+          <a href="https://translate.google.com/#<%- linkParams %>" target="_blank" rel="noopener" onclick="openGoogleTranslate(event)">open in Google Translate</a>
         </div>
       </div></div>
     </label>

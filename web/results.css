@@ -68,3 +68,6 @@
 .small {
   font-size: 75%;
 }
+.small > img {
+  vertical-align: middle;
+}
