@@ -1,5 +1,5 @@
 const fsPromises = require('fs').promises;
-const tempfile = require('./tempfile');
+const cache = require('./cache');
 const ocr = require('./ocr');
 const translate = require('./translate');
 const results = require('./results');
@@ -15,7 +15,7 @@ async function parallel(tasks) {
 
 async function handleFile(filename) {
   const imageData = await fsPromises.readFile(filename);
-  const hash = await tempfile.writeHash(imageData);
+  const hash = await cache.writeHash(imageData);
   const annotations = await ocr.write(hash);
   await translate.write(annotations, 'en');
   return results.writeHTML({annotations, hash});
@@ -31,7 +31,7 @@ async function writeHTML() {
 async function makeLinks() {
   const filenames = await fsPromises.readdir(staticPath);
   return parallel(filenames.map(f =>
-    tempfile.symlink(`${staticPath}/${f}`, f)
+    cache.symlink(`${staticPath}/${f}`, f)
   ));
 }
 

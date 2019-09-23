@@ -1,5 +1,5 @@
 const {Translate} = require('@google-cloud/translate');
-const tempfile = require('./tempfile');
+const cache = require('./cache');
 
 const client = new Translate({
   keyFilename: '../keys/google_application_credentials.json'
@@ -7,8 +7,8 @@ const client = new Translate({
 
 async function write(annotations, target) {
   const text = annotations.map(x => x.text.replace(/\n/g, ' '));
-  const hash = tempfile.getHash(JSON.stringify(text));
-  const translations = await tempfile.cacheJSON(
+  const hash = cache.getHash(JSON.stringify(text));
+  const translations = await cache.cacheJSON(
     `${hash}.t.${target}.json`,
     () => client.translate(text, target)
   );

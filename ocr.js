@@ -1,17 +1,17 @@
 const vision = require('@google-cloud/vision');
-const tempfile = require('./tempfile');
+const cache = require('./cache');
 
 const client = new vision.ImageAnnotatorClient({
   keyFilename: '../keys/google_application_credentials.json'
 });
 
 async function request(filename) {
-  const [result] = await client.documentTextDetection(tempfile.path(filename));
+  const [result] = await client.documentTextDetection(cache.path(filename));
   return result;
 }
 
 async function write(hash) {
-  const annotations = await tempfile.cacheJSON(
+  const annotations = await cache.cacheJSON(
     `${hash}.o.json`,
     () => request(hash)
   );

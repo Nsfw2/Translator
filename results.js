@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const tempfile = require('./tempfile');
+const cache = require('./cache');
 
 function makeTemplate(text) {
   return _.template(text.replace(/\n\s*/g, ''));
@@ -78,7 +78,7 @@ function generateHTML(options) {
 }
 
 async function writeHTML(options) {
-  return tempfile.write(`${options.hash}.html`, () => generateHTML(options));
+  return cache.write(`${options.hash}.html`, () => generateHTML(options));
 }
 
 module.exports = {writeHTML};
