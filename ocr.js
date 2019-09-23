@@ -5,15 +5,15 @@ const client = new vision.ImageAnnotatorClient({
   keyFilename: '../keys/google_application_credentials.json'
 });
 
-async function request(filename) {
-  const [result] = await client.documentTextDetection(cache.path(filename));
+async function request(imageData) {
+  const [result] = await client.documentTextDetection(imageData);
   return result;
 }
 
-async function write(hash) {
+async function write(hash, imageData) {
   const annotations = await cache.writeJSON(
     `${hash}.o.json`,
-    () => request(hash)
+    () => request(imageData)
   );
   return processParagraphs(annotations);
 }

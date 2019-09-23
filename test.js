@@ -13,12 +13,19 @@ async function parallel(tasks) {
   ));
 }
 
-async function handleFile(filename) {
-  const imageData = await fsPromises.readFile(filename);
-  const hash = await cache.writeHash(imageData);
-  const annotations = await ocr.write(hash);
+async function makeResults(hash, imageData) {
+  const annotations = await ocr.write(hash, imageData);
   await translate.write(annotations, 'en');
   return results.writeHTML({annotations, hash});
+}
+
+async function handleFile(filename) {
+  const imageData = await fsPromises.readFile(filename);
+  const hash = await cache.getHash(imageData);
+  return parallel([
+    cache.write(hash, imageData),
+    makeResults(hash, imageData)
+  ]);
 }
 
 async function writeHTML() {
