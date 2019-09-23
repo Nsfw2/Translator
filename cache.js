@@ -56,7 +56,7 @@ async function writeHash(contents) {
   return hash;
 }
 
-async function cacheJSON(filename, makeContents) {
+async function writeJSON(filename, makeContents) {
   var data = await write(filename, makeContents, JSON.stringify);
   if (!data) {
     data = await read(filename, {encoding: 'utf8'});
@@ -74,4 +74,4 @@ async function symlink(target, filename) {
   }
 }
 
-module.exports = {path, read, write, getHash, writeHash, cacheJSON, symlink};
+module.exports = {path, read, write, getHash, writeHash, writeJSON, symlink};

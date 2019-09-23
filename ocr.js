@@ -11,7 +11,7 @@ async function request(filename) {
 }
 
 async function write(hash) {
-  const annotations = await cache.cacheJSON(
+  const annotations = await cache.writeJSON(
     `${hash}.o.json`,
     () => request(hash)
   );

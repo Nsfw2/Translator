@@ -8,7 +8,7 @@ const client = new Translate({
 async function write(annotations, target) {
   const text = annotations.map(x => x.text.replace(/\n/g, ' '));
   const hash = cache.getHash(JSON.stringify(text));
-  const translations = await cache.cacheJSON(
+  const translations = await cache.writeJSON(
     `${hash}.t.${target}.json`,
     () => client.translate(text, target)
   );
