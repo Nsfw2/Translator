@@ -50,12 +50,6 @@ function getHash(data) {
   return hash.digest('hex');
 }
 
-async function writeHash(contents) {
-  const hash = getHash(contents);
-  await write(hash, contents);
-  return hash;
-}
-
 async function writeJSON(filename, makeContents) {
   var data = await write(filename, makeContents, JSON.stringify);
   if (!data) {
@@ -74,4 +68,4 @@ async function symlink(target, filename) {
   }
 }
 
-module.exports = {path, read, write, getHash, writeHash, writeJSON, symlink};
+module.exports = {path, read, write, getHash, writeJSON, symlink};
