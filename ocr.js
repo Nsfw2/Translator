@@ -5,15 +5,10 @@ const client = new vision.ImageAnnotatorClient({
   keyFilename: '../keys/google_application_credentials.json'
 });
 
-async function request(imageData) {
-  const [result] = await client.documentTextDetection(imageData);
-  return result;
-}
-
 async function ocr({hash, imageData}) {
   const annotations = await cache.writeJSON(
     `${hash}.o.json`,
-    () => request(imageData)
+    () => client.documentTextDetection(imageData)
   );
   return processParagraphs(annotations);
 }
@@ -61,7 +56,7 @@ function validateBox(obj) {
 
 function processParagraphs(annotations) {
   return (
-    extractParagraphs(annotations)
+    extractParagraphs(annotations[0])
       .filter(validateBox)
       .map(p => ({text: extractText(p), vertices: p.boundingBox.vertices}))
   );
