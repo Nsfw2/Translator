@@ -11,7 +11,7 @@ function getHash(data) {
 
 const writers = new Map();
 
-async function writeJSON(filename, makeContents) {
+async function writeJSON(filename, inputData, makeContents) {
   const fullname = `${outputPath}/${filename}`;
   let writer = writers.get(filename);
   if (!writer) {
@@ -20,18 +20,21 @@ async function writeJSON(filename, makeContents) {
       try {
         contents = await fsPromises.readFile(fullname, {encoding: 'utf8'});
         contents = JSON.parse(contents);
+        if (JSON.stringify(contents.i) === JSON.stringify(inputData)) {
+          return contents.o;
+        }
       } catch(err) {
         if (err.code !== 'ENOENT') console.error(err);
-        contents = await makeContents();
-        // dispatch write job without awaiting
-        (async() => {
-          const contents2 = JSON.stringify(contents);
-          await fsPromises.mkdir(outputPath, {recursive: true});
-          fsPromises.writeFile(fullname, contents2);
-        })().finally(() => {
-          writers.delete(filename);
-        });
       }
+      contents = await makeContents();
+      // dispatch write job without awaiting
+      (async() => {
+        const contents2 = JSON.stringify({i: inputData, o: contents});
+        await fsPromises.mkdir(outputPath, {recursive: true});
+        fsPromises.writeFile(fullname, contents2);
+      })().finally(() => {
+        writers.delete(filename);
+      });
       return contents;
     })();
     writers.set(filename, writer);

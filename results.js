@@ -86,7 +86,7 @@ function generateHTML(options) {
 async function results({imageData, srcLang, destLang}) {
   const hash = await cache.getHash(imageData);
   const annotations = await ocr.ocr({hash, imageData, srcLang});
-  await translate.translate({annotations, srcLang, destLang});
+  await translate.translate({hash, annotations, srcLang, destLang});
   const html = generateHTML({annotations, imageData});
   return {hash, html};
 }

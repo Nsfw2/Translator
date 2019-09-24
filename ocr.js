@@ -8,6 +8,7 @@ const client = new vision.ImageAnnotatorClient({
 async function ocr({hash, imageData}) {
   const annotations = await cache.writeJSON(
     `${hash}.o.json`,
+    null,
     () => client.documentTextDetection(imageData)
   );
   return processParagraphs(annotations);
