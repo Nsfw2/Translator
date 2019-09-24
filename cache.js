@@ -24,7 +24,7 @@ function evaluate(x) {
 const readers = new Map();
 const writers = new Map();
 
-async function read (filename, options, decodeContents, makeContents) {
+async function read(filename, options, decodeContents, makeContents) {
   let reader = (readers.get(filename) || writers.get(filename));
   if (!reader) {
     reader = (async () => {
