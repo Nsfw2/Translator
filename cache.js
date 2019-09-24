@@ -3,6 +3,12 @@ const crypto = require('crypto');
 
 const outputPath = './cache';
 
+function getHash(data) {
+  const hash = crypto.createHash('sha3-512');
+  hash.update(data);
+  return hash.digest('hex');
+}
+
 function path(filename) {
   return `${outputPath}/${filename}`;
 }
@@ -70,12 +76,6 @@ async function write(filename, makeContents, encodeContents, mode='wx') {
     writers.set(filename, writer);
   }
   return writer;
-}
-
-function getHash(data) {
-  const hash = crypto.createHash('sha3-512');
-  hash.update(data);
-  return hash.digest('hex');
 }
 
 async function writeJSON(filename, makeContents) {
