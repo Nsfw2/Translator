@@ -29,9 +29,13 @@ async function writeHTML() {
 
 async function makeLinks() {
   const filenames = await fsPromises.readdir(staticPath);
-  return parallel(filenames.map(f =>
-    fsPromises.symlink(`../${staticPath}/${f}`, `${outputPath}/${f}`)
-  ));
+  return parallel(filenames.map(async f => {
+    try {
+      await fsPromises.symlink(`../${staticPath}/${f}`, `${outputPath}/${f}`);
+    } catch(err) {
+      if (err.code !== 'EEXIST') throw err;
+    }
+  }));
 }
 
 async function test() {
