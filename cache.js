@@ -24,7 +24,7 @@ async function read (filename, options, decodeContents, makeContents) {
     reader = (async () => {
       let contents;
       try {
-        contents = await fsPromises.read(path(filename), options);
+        contents = await fsPromises.readFile(path(filename), options);
         if (decodeContents) contents = decodeContents(contents);
       } catch(err) {
         if (makeContents) {
