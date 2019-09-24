@@ -28,6 +28,7 @@ async function read (filename, options, decodeContents, makeContents) {
         if (decodeContents) contents = decodeContents(contents);
       } catch(err) {
         if (makeContents) {
+          if (err.code !== 'ENOENT') console.error(err);
           contents = await evaluate(makeContents);
         } else {
           throw err;
