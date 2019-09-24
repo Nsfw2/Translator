@@ -17,10 +17,7 @@ async function parallel(tasks) {
 async function handleFile(filename) {
   const imageData = await fsPromises.readFile(filename);
   const hash = await cache.getHash(imageData);
-  return parallel([
-    cache.write(hash, imageData),
-    cache.write(`${hash}.${destLang}.html`, () => results.results({hash, imageData, srcLang, destLang}))
-  ]);
+  return cache.write(`${hash}.${destLang}.html`, () => results.results({hash, imageData, srcLang, destLang}));
 }
 
 async function writeHTML() {

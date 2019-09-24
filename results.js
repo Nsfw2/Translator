@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const fileType = require('file-type');
 const ocr = require('./ocr');
 const translate = require('./translate');
 
@@ -17,7 +18,7 @@ const templates = {
       <label class="annotation-reset-body" for="annotation-reset"></label>
       <div class="image-container">
         <label for="annotation-reset">
-          <img src="<%- hash %>">
+          <img src="<%- imageURI %>">
         </label>
         <form class="annotation-container">
           <%= annotationsHTML %>
@@ -67,21 +68,24 @@ function generateAnnotation({translation, text, vertices, srcLang, destLang}) {
 }
 
 function generateHTML(options) {
-  const {hash, annotations} = options;
+  const {annotations, imageData} = options;
   const annotationsData = annotations.map(generateAnnotation);
   const zs = annotationsData.map(o => o.z1).sort((a, b) => a - b);
   annotationsData.forEach(o => {
     o.z1 = zs.indexOf(o.z1) - zs.length;
   });
   const annotationsHTML = annotationsData.map(templates.annotation).join('');
-  const html = templates.html({hash, annotationsHTML});
+  let mimeType = fileType(imageData).mime;
+  if (!(/^image\//.test(mimeType))) mimeType = 'application/octet-stream';
+  const imageURI = `data:${mimeType};base64,${imageData.toString('base64')}`;
+  const html = templates.html({imageURI, annotationsHTML});
   return html;
 }
 
 async function results({hash, imageData, srcLang, destLang}) {
   const annotations = await ocr.ocr({hash, imageData, srcLang});
   await translate.translate({annotations, srcLang, destLang});
-  return generateHTML({annotations, hash});
+  return generateHTML({annotations, imageData});
 }
 
 module.exports = {results};
