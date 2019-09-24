@@ -64,7 +64,7 @@ function generateAnnotation({translation, text, vertices, srcLang, destLang}) {
   const points = vertices.map(p => `${p.x - x1},${p.y - y1}`).join(' ');
   const translationHTML = escapeBR(translation);
   const textHTML = escapeBR(text);
-  const linkParams = [srcLang, destLang, text.replace(/\n/g, ' ')].map(encodeURIComponent).join('|');
+  const linkParams = [srcLang, destLang, text].map(encodeURIComponent).join('|');
   return {z1, x1, y1, dx, dy, points, translationHTML, textHTML, srcLang, destLang, linkParams};
 }
 
