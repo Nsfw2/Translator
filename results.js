@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const fileType = require('file-type');
+const cache = require('./cache');
 const ocr = require('./ocr');
 const translate = require('./translate');
 
@@ -82,10 +83,12 @@ function generateHTML(options) {
   return html;
 }
 
-async function results({hash, imageData, srcLang, destLang}) {
+async function results({imageData, srcLang, destLang}) {
+  const hash = await cache.getHash(imageData);
   const annotations = await ocr.ocr({hash, imageData, srcLang});
   await translate.translate({annotations, srcLang, destLang});
-  return generateHTML({annotations, imageData});
+  const html = generateHTML({annotations, imageData});
+  return {hash, html};
 }
 
 module.exports = {results};

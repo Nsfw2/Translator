@@ -1,9 +1,9 @@
 const fsPromises = require('fs').promises;
-const cache = require('./cache');
 const results = require('./results');
 
 const samplePath = '../sample';
 const staticPath = 'static';
+const outputPath = 'test';
 
 const srcLang = (process.argv[2] || 'auto');
 const destLang = (process.argv[3] || 'en');
@@ -16,8 +16,8 @@ async function parallel(tasks) {
 
 async function handleFile(filename) {
   const imageData = await fsPromises.readFile(filename);
-  const hash = await cache.getHash(imageData);
-  return cache.write(`${hash}.${destLang}.html`, () => results.results({hash, imageData, srcLang, destLang}));
+  const {hash, html} = await results.results({imageData, srcLang, destLang});
+  return fsPromises.writeFile(`${outputPath}/${hash}.${destLang}.html`, html);
 }
 
 async function writeHTML() {
@@ -30,11 +30,12 @@ async function writeHTML() {
 async function makeLinks() {
   const filenames = await fsPromises.readdir(staticPath);
   return parallel(filenames.map(f =>
-    cache.symlink(`${staticPath}/${f}`, f)
+    fsPromises.symlink(`../${staticPath}/${f}`, `${outputPath}/${f}`)
   ));
 }
 
 async function test() {
+  await fsPromises.mkdir(outputPath, {recursive: true});
   return parallel([
     writeHTML(),
     makeLinks()

@@ -90,13 +90,4 @@ async function writeJSON(filename, makeContents) {
   return contents;
 }
 
-async function symlink(target, filename) {
-  await mkdir();
-  try {
-    await fsPromises.symlink(`../${target}`, path(filename));
-  } catch(err) {
-    if (err.code !== 'EEXIST') throw err;
-  }
-}
-
-module.exports = {path, read, write, getHash, writeJSON, symlink};
+module.exports = {getHash, writeJSON};
