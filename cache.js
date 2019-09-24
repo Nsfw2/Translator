@@ -42,6 +42,7 @@ async function read(filename, options, decodeContents, makeContents) {
       }
       return contents;
     })();
+    readers.set(filename, reader);
   }
   return reader;
 }
