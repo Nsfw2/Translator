@@ -1,12 +1,14 @@
 const express = require('express');
+const index = require('./index');
 
 const staticPath = './static';
 
 const app = express();
 const port = +(process.argv[2] || 80);
 
-app.get('/', (request, response) => {
-  response.send('Hello from Express!');
+app.get('/', async (request, response) => {
+  const {html} = await index.index();
+  response.send(html);
 });
 
 app.use(express.static(staticPath));

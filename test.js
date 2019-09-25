@@ -1,4 +1,5 @@
 const fsPromises = require('fs').promises;
+const index = require('./index');
 const results = require('./results');
 
 const samplePath = '../sample';
@@ -12,6 +13,11 @@ async function parallel(tasks) {
   return Promise.all(tasks.map(task =>
     task.catch(console.error)
   ));
+}
+
+async function writeIndex() {
+  const {html} = await index.index();
+  return fsPromises.writeFile(`${outputPath}/index.html`, html);
 }
 
 async function handleFile(filename) {
@@ -44,6 +50,7 @@ async function makeLinks() {
 async function test() {
   await fsPromises.mkdir(outputPath, {recursive: true});
   return parallel([
+    writeIndex(),
     writeHTML(),
     makeLinks()
   ]);
