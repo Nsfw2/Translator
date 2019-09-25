@@ -8,3 +8,10 @@ function annotationFocus(el) {
   el.checked = true;
   el.parentNode.scrollIntoView({block: 'nearest', inline: 'nearest'});
 }
+
+function handleSelection(el) {
+  var sel = document.getSelection();
+  if (!sel.isCollapsed && el.contains(sel.focusNode)) {
+    el.querySelector('input').checked = true;
+  }
+}

@@ -37,7 +37,7 @@ const templates = {
     <a href=".">Translate another</a>
   `),
   annotation: makeTemplate(`
-    <label class="annotation" style="left: <%- x1 %>px; top: <%- y1 %>px;">
+    <label class="annotation" style="left: <%- x1 %>px; top: <%- y1 %>px;" onmouseup="handleSelection(this)">
       <input name="annotation-select" type="radio" onfocus="annotationFocus(this)">
       <svg class="outline" style="z-index: <%- z1 %>;" width="<%- dx %>" height="<%- dy %>" viewbox="0 0 <%- dx %> <%- dy %>" xmlns="http://www.w3.org/2000/svg">
         <polygon points="<%- points %>" fill="none" stroke="black" />
