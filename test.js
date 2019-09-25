@@ -8,6 +8,7 @@ const outputPath = 'test';
 
 const srcLang = (process.argv[2] || 'auto');
 const destLang = (process.argv[3] || 'en');
+const filenamesManual = process.argv.slice(4);
 
 async function parallel(tasks) {
   return Promise.all(tasks.map(task =>
@@ -30,10 +31,14 @@ async function handleFile(filename) {
 }
 
 async function writeHTML() {
-  const filenames = await fsPromises.readdir(samplePath);
-  return parallel(filenames.map(f =>
-    handleFile(`${samplePath}/${f}`)
-  ));
+  let filenames;
+  if (filenamesManual.length) {
+    filenames = filenamesManual;
+  } else {
+    filenames = await fsPromises.readdir(samplePath);
+    filenames = filenames.map(f => `${samplePath}/${f}`);
+  }
+  return parallel(filenames.map(handleFile));
 }
 
 async function makeLinks() {
