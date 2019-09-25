@@ -25,7 +25,7 @@ async function handleFile(filename) {
   const imageData = await fsPromises.readFile(filename);
   const {html, keys} = await results.results({imageData, srcLang, destLang});
   return parallel([
-    fsPromises.writeFile(`${outputPath}/${keys.storage}.${destLang}.html`, html),
+    fsPromises.writeFile(`${outputPath}/${keys.storage}.${srcLang}.${destLang}.html`, html),
     fsPromises.writeFile(`${outputPath}/${keys.storage}.key`, keys.encryption)
   ]);
 }
