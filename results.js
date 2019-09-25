@@ -20,7 +20,7 @@ const templates = {
       <main>
         <label class="annotation-reset-body" for="annotation-reset"></label>
         <div class="image-container">
-          <label for="annotation-reset">
+          <label class="annotation-reset-image" for="annotation-reset">
             <img src="<%- imageURI %>">
           </label>
           <form class="annotation-container">
