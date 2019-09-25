@@ -84,11 +84,11 @@ function generateHTML(options) {
 }
 
 async function results({imageData, srcLang, destLang}) {
-  const hash = await cache.getHash(imageData);
-  const annotations = await ocr.ocr({hash, imageData, srcLang});
-  await translate.translate({hash, annotations, srcLang, destLang});
+  const keys = await cache.getKeys(imageData);
+  const annotations = await ocr.ocr({keys, imageData, srcLang});
+  await translate.translate({keys, annotations, srcLang, destLang});
   const html = generateHTML({annotations, imageData});
-  return {hash, html};
+  return {html, keys};
 }
 
 module.exports = {results};

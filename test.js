@@ -16,8 +16,11 @@ async function parallel(tasks) {
 
 async function handleFile(filename) {
   const imageData = await fsPromises.readFile(filename);
-  const {hash, html} = await results.results({imageData, srcLang, destLang});
-  return fsPromises.writeFile(`${outputPath}/${hash}.${destLang}.html`, html);
+  const {html, keys} = await results.results({imageData, srcLang, destLang});
+  return parallel([
+    fsPromises.writeFile(`${outputPath}/${keys.storage}.${destLang}.html`, html),
+    fsPromises.writeFile(`${outputPath}/${keys.storage}.key`, keys.encryption)
+  ]);
 }
 
 async function writeHTML() {
