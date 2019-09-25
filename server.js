@@ -19,8 +19,7 @@ app.get('/', (req, res, next) => (async () => {
 app.post('/', upload.single('image'), (req, res, next) => (async () => {
   if (!req.file) throw new Error('no image posted');
   const imageData = req.file.buffer;
-  const srcLang = 'auto';
-  const destLang = 'en';
+  const {srcLang, destLang} = req.body;
   const {html} = await results.results({imageData, srcLang, destLang});
   res.send(html);
 })().catch(next));
