@@ -14,13 +14,12 @@ body {
 nav {
   background: #444;
   display: flex;
-  justify-content: center;
-  align-content: stretch;
 }
 nav > a {
+  flex: auto;
+  text-align: center;
   color: #ddd;
   text-decoration: none;
-  display: flex;
   font-size: 16px;
   padding: 2px;
 }
