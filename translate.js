@@ -8,6 +8,9 @@ const client = new Translate({
 async function translate({keys, annotations, srcLang, destLang}) {
   const text = annotations.map(x => x.text);
   const from = (srcLang === 'auto') ? undefined : srcLang;
+  if (!text.length) {
+    return annotations;
+  }
   const translations = await cache.writeJSON(
     keys,
     `t.${srcLang}.${destLang}.json`,
