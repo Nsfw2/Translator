@@ -66,6 +66,7 @@ main {
   position: relative;
   visibility: visible;
   pointer-events: none;
+  overflow: visible;
 }
 .outline > polygon {
   pointer-events: fill;
