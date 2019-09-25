@@ -28,7 +28,7 @@ const templates = {
           <label>
             <div>Translate from:</div>
             <select name="srcLang">
-              <option value="auto">Autodetect</option>
+              <option value="auto">Auto-detect</option>
               <option value="ja">Japanese</option>
             </select>
           </label>
