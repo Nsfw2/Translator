@@ -1,17 +1,39 @@
 body {
+  background: #222;
+  margin: 0;
+  font-family: sans-serif;
+}
+nav {
+  background: #444;
   display: flex;
   justify-content: center;
-  background: #222;
+  align-content: stretch;
+}
+nav > a {
+  color: #ddd;
+  text-decoration: none;
+  display: flex;
+  font-size: 16px;
+  padding: 2px;
+}
+main {
+  display: flex;
+  justify-content: center;
+  position: relative;
 }
 .annotation-reset-body {
-  position: fixed;
+  position: absolute;
   left: 0;
   top: 0;
   right: 0;
   bottom: 0;
 }
 .image-container {
-  position: absolute;
+  position: relative;
+  visibility: hidden;
+}
+.image-container > * {
+  visibility: visible;
 }
 .annotation-container {
   position: absolute;
@@ -63,7 +85,6 @@ body {
   position: relative;
   background: white;
   border: 1px solid black;
-  font-family: sans-serif;
   white-space: pre;
   z-index: 1;
 }

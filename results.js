@@ -16,17 +16,24 @@ const templates = {
       <link href="results.css" rel="stylesheet">
       <script src="results.js"></script>
     </head><body>
-      <label class="annotation-reset-body" for="annotation-reset"></label>
-      <div class="image-container">
-        <label for="annotation-reset">
-          <img src="<%- imageURI %>">
-        </label>
-        <form class="annotation-container">
-          <%= annotationsHTML %>
-          <input id="annotation-reset" type="reset">
-        </form>
-      </div>
+      <nav><%= navHTML %></nav>
+      <main>
+        <label class="annotation-reset-body" for="annotation-reset"></label>
+        <div class="image-container">
+          <label for="annotation-reset">
+            <img src="<%- imageURI %>">
+          </label>
+          <form class="annotation-container">
+            <%= annotationsHTML %>
+            <input id="annotation-reset" type="reset">
+          </form>
+        </div>
+      </main>
+      <nav><%= navHTML %></nav>
     </body></html>
+  `),
+  nav: makeTemplate(`
+    <a href="/">Translate another</a>
   `),
   annotation: makeTemplate(`
     <label class="annotation" style="left: <%- x1 %>px; top: <%- y1 %>px;">
@@ -79,7 +86,8 @@ function generateHTML(options) {
   let mimeType = fileType(imageData).mime;
   if (!(/^image\//.test(mimeType))) mimeType = 'application/octet-stream';
   const imageURI = `data:${mimeType};base64,${imageData.toString('base64')}`;
-  const html = templates.html({imageURI, annotationsHTML});
+  const navHTML = templates.nav();
+  const html = templates.html({imageURI, annotationsHTML, navHTML});
   return html;
 }
 
