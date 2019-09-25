@@ -5,12 +5,20 @@ const client = new vision.ImageAnnotatorClient({
   keyFilename: '../keys/google_application_credentials.json'
 });
 
-async function ocr({keys, imageData}) {
+async function request({imageData, srcLang}) {
+  let languageHints = (srcLang === 'auto') ? undefined : [srcLang];
+  return client.documentTextDetection({
+    image: {content: imageData},
+    imageContext: {languageHints}
+  });
+}
+
+async function ocr({keys, imageData, srcLang}) {
   const annotations = await cache.writeJSON(
     keys,
-    'o.json',
+    `o.${srcLang}.json`,
     null,
-    () => client.documentTextDetection(imageData)
+    () => request({imageData, srcLang})
   );
   return processParagraphs(annotations);
 }
