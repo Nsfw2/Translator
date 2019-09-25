@@ -9,7 +9,9 @@ const templates = {
     <!doctype html><head>
       <meta charset="UTF-8">
       <title>Translate an image</title>
+      <link href="index.css" rel="stylesheet">
     </head><body>
+      <h1>Translate an image</h1>
       <form action="/" method="POST">
         <input type="file">
         <input type="submit">
