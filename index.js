@@ -20,7 +20,7 @@ const templates = {
           </label>
           <label>
             <div>Or paste a link to the image:</div>
-            <input name="imageurl" type="text">
+            <input name="imageURL" type="text">
           </label>
           <label>Or drag and drop an image.</label>
         </section>

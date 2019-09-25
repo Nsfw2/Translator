@@ -1,5 +1,6 @@
 const express = require('express');
 const multer = require('multer');
+const got = require('got');
 const index = require('./index');
 const results = require('./results');
 
@@ -17,8 +18,14 @@ app.get('/', (req, res, next) => (async () => {
 })().catch(next));
 
 app.post('/', upload.single('image'), (req, res, next) => (async () => {
-  if (!req.file) throw new Error('no image posted');
-  const imageData = req.file.buffer;
+  let imageData;
+  if (req.file) {
+    imageData = req.file.buffer;
+  } else if (req.body.imageURL) {
+    imageData = (await got(req.body.imageURL, {encoding: null})).body;
+  } else {
+    throw new Error('no image posted');
+  }
   const {srcLang, destLang} = req.body;
   const {html} = await results.results({imageData, srcLang, destLang});
   res.send(html);
