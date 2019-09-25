@@ -1,3 +1,8 @@
+body {
+  display: flex;
+  justify-content: center;
+  background: #222;
+}
 .annotation-reset-body {
   position: fixed;
   left: 0;
