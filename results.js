@@ -34,7 +34,7 @@ const templates = {
     </body></html>
   `),
   nav: makeTemplate(`
-    <a href="/">Translate another</a>
+    <a href=".">Translate another</a>
   `),
   annotation: makeTemplate(`
     <label class="annotation" style="left: <%- x1 %>px; top: <%- y1 %>px;">

@@ -12,7 +12,7 @@ const templates = {
       <link href="index.css" rel="stylesheet">
     </head><body>
       <h1>Translate an image</h1>
-      <form action="" method="POST" enctype="multipart/form-data">
+      <form action="." method="POST" enctype="multipart/form-data">
         <input name="image" type="file">
         <input type="submit">
       </form>
