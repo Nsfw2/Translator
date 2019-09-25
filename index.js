@@ -11,10 +11,36 @@ const templates = {
       <title>Translate an image</title>
       <link href="index.css" rel="stylesheet">
     </head><body>
-      <h1>Translate an image</h1>
       <form action="." method="POST" enctype="multipart/form-data">
-        <input name="image" type="file">
-        <input type="submit">
+        <h1>Translate an image</h1>
+        <section class="imageselect">
+          <label>
+            <div>Choose an image from your computer:</div>
+            <input name="image" type="file">
+          </label>
+          <label>
+            <div>Or paste a link to the image:</div>
+            <input name="imageurl" type="text">
+          </label>
+          <label>Or drag and drop an image.</label>
+        </section>
+        <section class="languages">
+          <label>
+            <div>Translate from:</div>
+            <select name="srcLang">
+              <option value="auto">Autodetect</option>
+              <option value="ja">Japanese</option>
+            </select>
+          </label>
+          <label>
+            <div>Translate to:</div>
+            <select name="destLang">
+              <option value="en">English</option>
+              <option value="es">Spanish</option>
+            </select>
+          </label>
+        </section>
+        <input value="Submit" type="submit">
       </form>
     </body></html>
   `),
