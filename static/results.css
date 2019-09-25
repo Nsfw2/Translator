@@ -3,6 +3,14 @@ body {
   margin: 0;
   font-family: sans-serif;
 }
+.annotation-reset-body {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
 nav {
   background: #444;
   display: flex;
@@ -21,7 +29,7 @@ main {
   justify-content: center;
   position: relative;
 }
-.annotation-reset-body {
+.annotation-reset-main {
   position: absolute;
   left: 0;
   top: 0;
@@ -30,10 +38,6 @@ main {
 }
 .image-container {
   position: relative;
-  visibility: hidden;
-}
-.image-container > * {
-  visibility: visible;
 }
 .annotation-reset-image {
   display: block;

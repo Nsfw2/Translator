@@ -16,9 +16,10 @@ const templates = {
       <link href="results.css" rel="stylesheet">
       <script src="results.js"></script>
     </head><body>
+      <label class="annotation-reset-body" for="annotation-reset"></label>
       <nav><%= navHTML %></nav>
       <main>
-        <label class="annotation-reset-body" for="annotation-reset"></label>
+        <label class="annotation-reset-main" for="annotation-reset"></label>
         <div class="image-container">
           <label class="annotation-reset-image" for="annotation-reset">
             <img src="<%- imageURI %>">
