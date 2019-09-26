@@ -1,6 +1,6 @@
 const express = require('express');
 const multer = require('multer');
-const got = require('got');
+const fetch = require('node-fetch');
 const _ = require('lodash');
 const index = require('./index');
 const results = require('./results');
@@ -41,11 +41,12 @@ app.post('/results', upload.single('image'), (req, res, next) => (async () => {
     if (!/^https?:/i.test(imageURL)) {
       return res.status(400).send(`Invalid URL: ${_.escape(imageURL)}`);
     }
-    try {
-      imageData = (await got(imageURL, {encoding: null})).body;
-    } catch(err) {
+    const resURL = await fetch(imageURL, {size: maxFileSize});
+    if (resURL.ok) {
+      imageData = await resURL.buffer();
+    } else {
       return res.status(404).send(
-        (err.statusCode ? `Error ${+err.statusCode}` : 'Connection error') + ` from ${_.escape(imageURL)}`
+        (resURL.status ? `${+resURL.status} ${_.escape(resURL.statusText)}` : 'Connection error') + ` from ${_.escape(imageURL)}`
       );
     }
   } else {
