@@ -26,7 +26,7 @@ app.post('/results', upload.single('image'), (req, res, next) => (async () => {
   } else if (req.body.imageURL) {
     imageData = (await got(req.body.imageURL, {encoding: null})).body;
   } else {
-    throw new Error('no image posted');
+    return res.status(400).send('Error: No image posted.');
   }
   const {srcLang, destLang} = req.body;
   const {html} = await results.results({imageData, srcLang, destLang});
