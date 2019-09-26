@@ -79,6 +79,23 @@ document.onpaste = function(e) {
   setFile(file, name);
 };
 
+function ajaxSubmit(el, e) {
+  e.preventDefault();
+  var form = new FormData(el);
+  var req = new XMLHttpRequest();
+  req.open('POST', 'results', true);
+  req.responseType = 'document';
+  req.onloadend = function() {
+    if (req.status) {
+      document.replaceChild(req.response.documentElement, document.documentElement);
+      el.hidden = true;
+      document.body.appendChild(el);
+      history.replaceState(null, '', 'results');
+    }
+  };
+  req.send(form);
+}
+
 function parseHash() {
   var inputs = document.querySelectorAll('input[type=text], input[type=hidden], select');
   var i;
@@ -108,6 +125,10 @@ function initPreview() {
     var name = $(sel.fileB64Name).value;
     showPreview(file, name);
   }
+}
+
+if (/\/results/g.test(location.pathname)) {
+  history.replaceState(null, '', '.');
 }
 
 document.addEventListener('DOMContentLoaded', function() {

@@ -12,12 +12,12 @@ const upload = multer({storage});
 const app = express();
 const port = +(process.argv[2] || 80);
 
-app.get('/', (req, res, next) => (async () => {
+app.get(['/', '/results'], (req, res, next) => (async () => {
   const {html} = await index.index();
   res.send(html);
 })().catch(next));
 
-app.post('/', upload.single('image'), (req, res, next) => (async () => {
+app.post('/results', upload.single('image'), (req, res, next) => (async () => {
   let imageData;
   if (req.file) {
     imageData = req.file.buffer;
