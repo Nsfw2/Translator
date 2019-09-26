@@ -1,4 +1,7 @@
 const html = require('./html');
+const translate = require('./translate');
+
+const topLanguages = ['en', 'ja'];
 
 const templates = html.makeTemplates({
   html: `
@@ -41,14 +44,13 @@ const templates = html.makeTemplates({
             <div>Translate from:</div>
             <select name="srcLang">
               <option value="auto">Auto-detect</option>
-              <option value="ja">Japanese</option>
+              <%= langHTML %>
             </select>
           </label>
           <label>
             <div>Translate to:</div>
             <select name="destLang">
-              <option value="en">English</option>
-              <option value="es">Spanish</option>
+              <%= langHTML %>
             </select>
           </label>
         </section>
@@ -56,11 +58,29 @@ const templates = html.makeTemplates({
         <output hidden></output>
       </form>
     </body></html>
-  `
+  `,
+  language: `<option value="<%- code %>"><%- name %></option>`
 });
 
+function generateLangHTML(languages) {
+  let langHTML = '';
+  const langMap = new Map(languages.map(lang => [lang.code, lang.name]));
+  topLanguages.forEach(code => {
+    const name = langMap.get(code);
+    if (name) langHTML += templates.language({code, name});
+  });
+  languages.forEach(lang => {
+    if (!topLanguages.includes(lang.code)) {
+      langHTML += templates.language(lang);
+    }
+  });
+  return langHTML;
+}
+
 async function index() {
-  const indexHTML = templates.html({navbar: html.navbar});
+  const languages = await translate.getLanguages();
+  const langHTML = generateLangHTML(languages);
+  const indexHTML = templates.html({langHTML, navbar: html.navbar});
   return {html: indexHTML};
 }
 

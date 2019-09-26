@@ -64,6 +64,7 @@ function encrypt(contents, key) {
 const writers = new Map();
 
 async function writeJSON(keys, suffix, inputData, makeContents) {
+  if (!keys) keys = {storage: '_'};
   const filename = `${keys.storage}.${suffix}`;
   let writer = writers.get(filename);
   if (writer) return writer;
@@ -72,7 +73,7 @@ async function writeJSON(keys, suffix, inputData, makeContents) {
     let contents;
     try {
       contents = await fsPromises.readFile(fullname);
-      contents = decrypt(contents, keys.encryption);
+      if (keys.encryption) contents = decrypt(contents, keys.encryption);
       contents = JSON.parse(contents.toString('utf8'));
       if (JSON.stringify(contents.i) === JSON.stringify(inputData)) {
         return contents.o;
@@ -85,7 +86,7 @@ async function writeJSON(keys, suffix, inputData, makeContents) {
     (async() => {
       let contents2 = {i: inputData, o: contents};
       contents2 = Buffer.from(JSON.stringify(contents2), 'utf8');
-      contents2 = encrypt(contents2, keys.encryption);
+      if (keys.encryption) contents2 = encrypt(contents2, keys.encryption);
       await fsPromises.mkdir(outputPath, {recursive: true});
       fsPromises.writeFile(fullname, contents2);
     })().finally(() => {

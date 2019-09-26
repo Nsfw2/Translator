@@ -27,4 +27,14 @@ async function translate({keys, annotations, srcLang, destLang}) {
   return annotations;
 }
 
-module.exports = {translate};
+async function getLanguages() {
+  const languages = await cache.writeJSON(
+    null,
+    `lang.json`,
+    null,
+    () => client.getLanguages()
+  );
+  return languages[0];
+}
+
+module.exports = {translate, getLanguages};
