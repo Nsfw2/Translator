@@ -11,6 +11,7 @@ const html = require('./html');
 const staticPath = './static';
 const htmlPath = './html';
 const maxFileSize = (10 << 20);
+const serverHostname = 'http://localhost:8009/';
 
 const limits = {
   fields: index.fieldCount - 1,
@@ -92,7 +93,10 @@ app.post('/results', upload.single('image'), (req, res, next) => (async () => {
 
 app.get(['/tools', '/privacy', '/feedback'], (req, res, next) => (async () => {
   const template = await fsPromises.readFile(`${htmlPath}${req.path}`, {encoding: 'utf-8'});
-  const templateHTML = _.template(html.trim(template))({navbar: html.navbar});
+  const templateHTML = _.template(html.trim(template))({
+    navbar: html.navbar,
+    host: serverHostname
+  });
   res.send(templateHTML);
 })().catch(next));
 

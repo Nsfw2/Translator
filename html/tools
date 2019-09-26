@@ -8,14 +8,14 @@
   <main>
     <h1>Tools</h1>
     <p>You can use a URL like</p>
-    <a href="http://localhost:8009/?imageURL=https%3A%2F%2Fexample.com%2Fexample.png">http://localhost:8009/?imageURL=https%3A%2F%2Fexample.com%2Fexample.png</a>
+    <a href="<%- host %>?imageURL=https%3A%2F%2Fexample.com%2Fexample.png"><%- host %>?imageURL=https%3A%2F%2Fexample.com%2Fexample.png</a>
     <p>to bring up form with the URL already filled in so that all you have to do is fill out the captcha and submit. 
       This is useful with browser extensions designed for reverse searching images; for example, in the extension 
       <a href="http://saucenao.com/tools/">Image Search Options</a>, 
-      you can put <code>http://localhost:8009/</code> under "Search URL" and <code>imageURL=::$URL::</code> under "Search Variables" 
+      you can put <code><%- host %></code> under "Search URL" and <code>imageURL=::$URL::</code> under "Search Variables" 
       to add an entry for this site which you can access from the right-click context menu on any image.</p>
     <p>Setting the language fields is also possible, for example:</p>
-    <a href="http://localhost:8009/?imageURL=https%3A%2F%2Fexample.com%2Fexample.png&srcLang=ja&destLang=es">http://localhost:8009/?imageURL=https%3A%2F%2Fexample.com%2Fexample.png&srcLang=ja&destLang=es</a>
+    <a href="<%- host %>?imageURL=https%3A%2F%2Fexample.com%2Fexample.png&srcLang=ja&destLang=es"><%- host %>?imageURL=https%3A%2F%2Fexample.com%2Fexample.png&srcLang=ja&destLang=es</a>
     <p>You can also use <code>#</code> in place of <code>?</code>; this method has the advantage of not sending the URL to the site until you submit the form.</p>
   </main>
 </body></html>
