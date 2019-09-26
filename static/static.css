@@ -32,3 +32,7 @@ h1 {
 textarea {
   height: 400px;
 }
+code {
+  display: inline-block;
+  outline: 1px dotted black;
+}

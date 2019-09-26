@@ -7,7 +7,15 @@
   <%= navbar %>
   <main>
     <h1>Tools</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Dolor sed viverra ipsum nunc aliquet bibendum enim. In massa tempor nec feugiat. Nunc aliquet bibendum enim facilisis gravida. Nisl nunc mi ipsum faucibus vitae aliquet nec ullamcorper. Amet luctus venenatis lectus magna fringilla. Volutpat maecenas volutpat blandit aliquam etiam erat velit scelerisque in. Egestas egestas fringilla phasellus faucibus scelerisque eleifend. Sagittis orci a scelerisque purus semper eget duis. Nulla pharetra diam sit amet nisl suscipit. Sed adipiscing diam donec adipiscing tristique risus nec feugiat in. Fusce ut placerat orci nulla. Pharetra vel turpis nunc eget lorem dolor. Tristique senectus et netus et malesuada.</p>
-    <p>Etiam tempor orci eu lobortis elementum nibh tellus molestie. Neque egestas congue quisque egestas. Egestas integer eget aliquet nibh praesent tristique. Vulputate mi sit amet mauris. Sodales neque sodales ut etiam sit. Dignissim suspendisse in est ante in. Volutpat commodo sed egestas egestas. Felis donec et odio pellentesque diam. Pharetra vel turpis nunc eget lorem dolor sed viverra. Porta nibh venenatis cras sed felis eget. Aliquam ultrices sagittis orci a. Dignissim diam quis enim lobortis. Aliquet porttitor lacus luctus accumsan. Dignissim convallis aenean et tortor at risus viverra adipiscing at.</p>
+    <p>You can use a URL like</p>
+    <a href="http://localhost:8009/?imageURL=https%3A%2F%2Fexample.com%2Fexample.png">http://localhost:8009/?imageURL=https%3A%2F%2Fexample.com%2Fexample.png</a>
+    <p>to bring up form with the URL already filled in so that all you have to do is fill out the captcha and submit. 
+      This is useful with browser extensions designed for reverse searching images; for example, in the extension 
+      <a href="http://saucenao.com/tools/">Image Search Options</a>, 
+      you can put <code>http://localhost:8009/</code> under "Search URL" and <code>imageURL=::$URL::</code> under "Search Variables" 
+      to add an entry for this site which you can access from the right-click context menu on any image.</p>
+    <p>Setting the language fields is also possible, for example:</p>
+    <a href="http://localhost:8009/?imageURL=https%3A%2F%2Fexample.com%2Fexample.png&srcLang=ja&destLang=es">http://localhost:8009/?imageURL=https%3A%2F%2Fexample.com%2Fexample.png&srcLang=ja&destLang=es</a>
+    <p>You can also use <code>#</code> in place of <code>?</code>; this method has the advantage of not sending the URL to the site until you submit the form.</p>
   </main>
 </body></html>
