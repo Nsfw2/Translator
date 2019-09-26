@@ -18,17 +18,20 @@ const templates = html.makeTemplates({
       <main>
         <label class="annotation-reset-main" for="annotation-reset"></label>
         <div class="image-container">
-          <label class="annotation-reset-image" for="annotation-reset">
-            <img src="<%- imageURI %>">
-          </label>
-          <form class="annotation-container">
-            <%= annotationsHTML %>
-            <input id="annotation-reset" type="reset">
-          </form>
+          <%= imageHTML %>
         </div>
       </main>
       <nav id="botnav"><a href=".">Translate another</a></nav>
     </body></html>
+  `,
+  image: `
+    <label class="annotation-reset-image" for="annotation-reset">
+      <img src="<%- imageURI %>">
+    </label>
+    <form class="annotation-container">
+      <%= annotationsHTML %>
+      <input id="annotation-reset" type="reset">
+    </form>
   `,
   annotation: `
     <label class="annotation" style="left: <%- x1 %>px; top: <%- y1 %>px;" onmouseup="handleSelection(this)">
@@ -77,7 +80,8 @@ function generateHTML(options) {
   let mimeType = (fileType(imageData) || {}).mime;
   if (!mimeType || !(/^image\//.test(mimeType))) mimeType = 'application/octet-stream';
   const imageURI = `data:${mimeType};base64,${imageData.toString('base64')}`;
-  const resultsHTML = templates.html({imageURI, annotationsHTML, navbar: html.navbar});
+  const imageHTML = templates.image({imageURI, annotationsHTML});
+  const resultsHTML = templates.html({imageHTML, navbar: html.navbar});
   return resultsHTML;
 }
 
@@ -89,4 +93,9 @@ async function results({imageData, srcLang, destLang}) {
   return {html: resultsHTML, keys};
 }
 
-module.exports = {results};
+function blankHTML() {
+  const resultsHTML = templates.html({imageHTML: '', navbar: html.navbar});
+  return resultsHTML;
+}
+
+module.exports = {results, blankHTML};

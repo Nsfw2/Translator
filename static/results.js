@@ -15,3 +15,14 @@ function handleSelection(el) {
     el.querySelector('input').checked = true;
   }
 }
+
+function initHistory() {
+  var container = document.querySelector('.image-container');
+  if (history.state) {
+    container.innerHTML = history.state.imageHTML;
+  } else {
+    history.replaceState({imageHTML: container.innerHTML}, '', location.href);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', initHistory);
