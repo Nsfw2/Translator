@@ -81,6 +81,9 @@ app.post('/results', upload.single('image'), (req, res, next) => (async () => {
   } else {
     return res.status(400).send('Error: No image posted.');
   }
+  if (imageData.length === 0) {
+    return res.status(400).send('Error: File is empty.');
+  }
   const {srcLang, destLang} = req.body;
   const languages = await translate.getLanguages();
   const languageCodes = new Set(languages.map(lang => lang.code));
