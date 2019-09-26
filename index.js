@@ -53,6 +53,7 @@ const templates = html.makeTemplates({
           </label>
         </section>
         <input value="Submit" type="submit">
+        <output hidden></output>
       </form>
     </body></html>
   `

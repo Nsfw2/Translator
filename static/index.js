@@ -5,7 +5,8 @@ var sel = {
   preview: '.imagepreview',
   previewImg: '.imagepreview > img',
   previewName: '.imagepreview-filename',
-  submit: 'input[type=submit]'
+  submit: 'input[type=submit]',
+  output: 'output'
 };
 
 function $(selector) {
@@ -86,11 +87,16 @@ function ajaxSubmit(el, e) {
   req.open('POST', 'results', true);
   req.responseType = 'document';
   req.onloadend = function() {
-    if (req.status) {
+    if (req.status === 200) {
       document.replaceChild(req.response.documentElement, document.documentElement);
       el.hidden = true;
       document.body.appendChild(el);
       history.replaceState(null, '', 'results');
+    } else {
+      var error = (req.response && req.response.documentElement) ? req.response.documentElement.textContent : 'Connection Error';
+      var output = $(sel.output);
+      output.textContent = error;
+      output.hidden = false;
     }
   };
   req.send(form);

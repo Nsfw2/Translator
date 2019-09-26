@@ -55,7 +55,12 @@ select {
 .languages {
   display: flex;
 }
+form > input, form > output {
+  margin: 12px 5px;
+}
 input[type="submit"] {
   padding: 5px;
-  margin: 12px 5px;
+}
+output {
+  color: red;
 }
