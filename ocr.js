@@ -1,16 +1,20 @@
 const vision = require('@google-cloud/vision');
 const cache = require('./cache');
+const throttle = require('./throttle');
 
 const client = new vision.ImageAnnotatorClient({
   keyFilename: '../keys/google_application_credentials.json'
 });
 
-async function ocr({keys, imageData}) {
+async function ocr({keys, imageData, ip}) {
   const annotations = await cache.writeJSON(
     keys,
     `o.auto.json`,
     null,
-    () => client.documentTextDetection({image: {content: imageData}})
+    async () => {
+      throttle.addCost('cloud', ip, 1.5);
+      return client.documentTextDetection({image: {content: imageData}});
+    }
   );
   return processParagraphs(annotations);
 }

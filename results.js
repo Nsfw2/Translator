@@ -87,10 +87,10 @@ function generateHTML(options) {
   return resultsHTML;
 }
 
-async function results({imageData, srcLang, destLang}) {
+async function results({imageData, srcLang, destLang, ip}) {
   const keys = await cache.getKeys(imageData);
-  const annotations = await ocr.ocr({keys, imageData, srcLang});
-  await translate.translate({keys, annotations, srcLang, destLang});
+  const annotations = await ocr.ocr({keys, imageData, srcLang, ip});
+  await translate.translate({keys, annotations, srcLang, destLang, ip});
   const resultsHTML = generateHTML({annotations, imageData});
   return {html: resultsHTML, keys};
 }

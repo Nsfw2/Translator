@@ -1,5 +1,6 @@
 const html = require('./html');
 const translate = require('./translate');
+const throttle = require('./throttle');
 
 const topLanguages = ['en', 'ja'];
 const fillableFields = ['imageURL', 'imageB64', 'imageB64Name', 'srcLang', 'destLang'];
@@ -55,12 +56,20 @@ const templates = html.makeTemplates({
             </select>
           </label>
         </section>
-        <input value="Submit" type="submit">
-        <output hidden></output>
+        <%= submit %>
       </form>
     </body></html>
   `,
-  language: `<option value="<%- code %>" <%= selected %>><%- name %></option>`
+  language: `<option value="<%- code %>" <%= selected %>><%- name %></option>`,
+  submit: `
+    <input value="Submit" type="submit">
+    <output hidden></output>
+  `,
+  cooldown: `
+    <input value="Submit" type="submit" hidden>
+    <output><%= message %></output>
+  `,
+  message: `Image translation is temporarily unavailable due to <%- issue %>. Try again in about an hour.`
 });
 
 function generateLangHTML(languages, selectedLang) {
@@ -81,12 +90,17 @@ function generateLangHTML(languages, selectedLang) {
   return langHTML;
 }
 
-async function index({imageURL, imageB64, imageB64Name, srcLang, destLang}) {
+async function index({imageURL, imageB64, imageB64Name, srcLang, destLang, ip}) {
   const languages = await translate.getLanguages();
   const srcLangHTML = generateLangHTML(languages, srcLang);
   const destLangHTML = generateLangHTML(languages, destLang);
-  const indexHTML = templates.html({imageURL, imageB64, imageB64Name, srcLangHTML, destLangHTML, navbar: html.navbar});
+  const submit = throttle.replaceSubmit('cloud', ip, templates);
+  const indexHTML = templates.html({imageURL, imageB64, imageB64Name, srcLangHTML, destLangHTML, navbar: html.navbar, submit});
   return {html: indexHTML};
 }
 
-module.exports = {index, fillableFields, fieldCount};
+function throttleMessage(issue) {
+  return templates.message({issue});
+}
+
+module.exports = {index, fillableFields, fieldCount, throttleMessage};

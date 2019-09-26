@@ -17,13 +17,13 @@ async function parallel(tasks) {
 }
 
 async function writeIndex() {
-  const {html} = await index.index();
+  const {html} = await index.index({ip: 'bypass'});
   return fsPromises.writeFile(`${outputPath}/index.html`, html);
 }
 
 async function handleFile(filename) {
   const imageData = await fsPromises.readFile(filename);
-  const {html, keys} = await results.results({imageData, srcLang, destLang});
+  const {html, keys} = await results.results({imageData, srcLang, destLang, ip: 'bypass'});
   return parallel([
     fsPromises.writeFile(`${outputPath}/${keys.storage}.${srcLang}.${destLang}.html`, html),
     fsPromises.writeFile(`${outputPath}/${keys.storage}.key`, keys.encryption)

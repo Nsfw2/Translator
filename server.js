@@ -8,6 +8,7 @@ const results = require('./results');
 const translate = require('./translate');
 const feedback = require('./feedback');
 const html = require('./html');
+const throttle = require('./throttle');
 
 const staticPath = './static';
 const htmlPath = './html';
@@ -37,8 +38,9 @@ function parseQuery(keys, query) {
 }
 
 app.get('/', (req, res, next) => (async () => {
-  const queryData = parseQuery(index.fillableFields, req.query);
-  const {html} = await index.index(queryData);
+  const options = parseQuery(index.fillableFields, req.query);
+  options.ip = req.ip;
+  const {html} = await index.index(options);
   res.send(html);
 })().catch(next));
 
@@ -47,6 +49,8 @@ app.get('/results', (req, res) => {
 });
 
 app.post('/results', upload.single('image'), (req, res, next) => (async () => {
+  const issue = throttle.overCost('cloud', req.ip);
+  if (issue) return res.status(429).send(index.throttleMessage(issue));
   let imageData;
   if (req.file) {
     imageData = req.file.buffer;
@@ -94,7 +98,7 @@ app.post('/results', upload.single('image'), (req, res, next) => (async () => {
   if (!languageCodes.has(destLang)) {
     return res.status(400).send(`Invalid destination language: ${_.escape(destLang)}`);
   }
-  const {html} = await results.results({imageData, srcLang, destLang});
+  const {html} = await results.results({imageData, srcLang, destLang, ip: req.ip});
   res.send(html);
 })().catch(next));
 

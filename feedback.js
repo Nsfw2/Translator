@@ -44,8 +44,7 @@ const templates = html.makeTemplates({
 });
 
 function feedback(ip) {
-  const issue = throttle.overCost('feedback', ip);
-  const submit = issue ? templates.cooldown({message: templates.message({issue})}) : templates.submit();
+  const submit = throttle.replaceSubmit('feedback', ip, templates);
   const form = templates.form({navbar: html.navbar, submit, maxLength});
   return form;
 }
