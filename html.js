@@ -3,7 +3,7 @@ const _ = require('lodash');
 const navbar = trim(`
   <nav id="topnav">
     <a href=".">Home</a>
-    <a href="about">About</a>
+    <a href="tools">Tools</a>
     <a href="privacy">Privacy</a>
     <a href="feedback">Feedback</a>
   </nav>
