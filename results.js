@@ -1,15 +1,11 @@
-const _ = require('lodash');
 const fileType = require('file-type');
 const cache = require('./cache');
 const ocr = require('./ocr');
 const translate = require('./translate');
+const html = require('./html');
 
-function makeTemplate(text) {
-  return _.template(text.replace(/\n\s*/g, ''));
-}
-
-const templates = {
-  html: makeTemplate(`
+const templates = html.makeTemplates({
+  html: `
     <!doctype html><head>
       <meta charset="UTF-8">
       <title>Translation results</title>
@@ -32,11 +28,11 @@ const templates = {
       </main>
       <nav><%= navHTML %></nav>
     </body></html>
-  `),
-  nav: makeTemplate(`
+  `,
+  nav: `
     <a href=".">Translate another</a>
-  `),
-  annotation: makeTemplate(`
+  `,
+  annotation: `
     <label class="annotation" style="left: <%- x1 %>px; top: <%- y1 %>px;" onmouseup="handleSelection(this)">
       <input name="annotation-select" type="radio" onfocus="annotationFocus(this)">
       <svg class="outline" style="z-index: <%- z1 %>;" width="<%- dx %>" height="<%- dy %>" viewbox="0 0 <%- dx %> <%- dy %>" xmlns="http://www.w3.org/2000/svg">
@@ -53,12 +49,8 @@ const templates = {
         </div>
       </div></div>
     </label>
-  `)
-};
-
-function escapeBR(text) {
-  return _.escape(text).replace(/\n/g, '<br>');
-}
+  `
+});
 
 function generateAnnotation({translation, text, vertices, srcLang, destLang}) {
   const xs = vertices.map(p => p.x);
@@ -70,8 +62,8 @@ function generateAnnotation({translation, text, vertices, srcLang, destLang}) {
   const dx = Math.max.apply(Math, xs) - x1;
   const dy = Math.max.apply(Math, ys) - y1;
   const points = vertices.map(p => `${p.x - x1},${p.y - y1}`).join(' ');
-  const translationHTML = escapeBR(translation);
-  const textHTML = escapeBR(text);
+  const translationHTML = html.escapeBR(translation);
+  const textHTML = html.escapeBR(text);
   const linkParams = [srcLang, destLang, text].map(encodeURIComponent).join('|');
   return {z1, x1, y1, dx, dy, points, translationHTML, textHTML, srcLang, destLang, linkParams};
 }

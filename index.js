@@ -1,11 +1,7 @@
-const _ = require('lodash');
+const html = require('./html');
 
-function makeTemplate(text) {
-  return _.template(text.replace(/\n\s*/g, ''));
-}
-
-const templates = {
-  html: makeTemplate(`
+const templates = html.makeTemplates({
+  html: `
     <!doctype html><head>
       <meta charset="UTF-8">
       <title>Translate an image</title>
@@ -53,8 +49,8 @@ const templates = {
         <input value="Submit" type="submit">
       </form>
     </body></html>
-  `),
-};
+  `
+});
 
 async function index() {
   const html = templates.html();
