@@ -105,12 +105,12 @@ async function results({imageData, srcLang, destLang, ip}) {
     await translate.translate({keys, annotations, srcLang, destLang, ip});
   } else {
     warningsHTML += templates.charCount({maxCharCount});
-    annotations.forEach(x => {
-      x.translation = '';
-      x.srcLang = srcLang;
-      x.destLang = destLang;
-    });
   }
+  annotations.forEach(x => {
+    if (!x.translation) x.translation = '';
+    if (!x.srcLang) x.srcLang = srcLang;
+    if (!x.destLang) x.destLang = destLang;
+  });
   const resultsHTML = generateHTML({annotations, imageData, warningsHTML});
   return {html: resultsHTML, keys};
 }
