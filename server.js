@@ -41,13 +41,24 @@ app.post('/results', upload.single('image'), (req, res, next) => (async () => {
     if (!/^https?:/i.test(imageURL)) {
       return res.status(400).send(`Invalid URL: ${_.escape(imageURL)}`);
     }
-    const resURL = await fetch(imageURL, {size: maxFileSize});
-    if (resURL.ok) {
-      imageData = await resURL.buffer();
-    } else {
-      return res.status(404).send(
-        (resURL.status ? `${+resURL.status} ${_.escape(resURL.statusText)}` : 'Connection error') + ` from ${_.escape(imageURL)}`
-      );
+    try {
+      const resURL = await fetch(imageURL, {size: maxFileSize});
+      if (resURL.ok) {
+        imageData = await resURL.buffer();
+      } else {
+        return res.status(404).send(
+          `${+resURL.status} ${_.escape(resURL.statusText)} from ${_.escape(imageURL)}`
+        );
+      }
+    } catch(err) {
+      if (err instanceof fetch.FetchError) {
+        if (err.type === 'max-size') {
+          res.status(413).send('Error: File too large');
+        } else {
+          res.status(404).send(`Error: ${_.escape(err.message)}`);
+        }
+      }
+      throw err;
     }
   } else {
     return res.status(400).send('Error: No image posted.');
