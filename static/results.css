@@ -12,6 +12,13 @@ body > div {
   bottom: 0;
   z-index: -1;
 }
+#warnings {
+  color: red;
+  text-align: center;
+}
+#warnings > div {
+  margin: 15px 0;
+}
 main {
   display: flex;
   justify-content: center;
@@ -88,9 +95,14 @@ main {
   display: block;
   padding: 4px;
 }
-.small {
+.attribution,
+.openGT {
   font-size: 75%;
 }
-.small > img {
+.attribution > img {
   vertical-align: middle;
+}
+.tooltip.hide-translation > .attribution,
+.tooltip.hide-translation > translation {
+  display: none;
 }

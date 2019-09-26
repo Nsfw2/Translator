@@ -4,6 +4,8 @@ const ocr = require('./ocr');
 const translate = require('./translate');
 const html = require('./html');
 
+const maxCharCount = 1000;
+
 const templates = html.makeTemplates({
   html: `
     <!doctype html><head>
@@ -16,6 +18,9 @@ const templates = html.makeTemplates({
       <div>
         <label class="annotation-reset-body" for="annotation-reset"></label>
         <%= navbar %>
+        <section id="warnings">
+          <%= warningsHTML %>
+        </section>
         <main>
           <label class="annotation-reset-main" for="annotation-reset"></label>
           <div class="image-container">
@@ -41,17 +46,20 @@ const templates = html.makeTemplates({
       <svg class="outline" style="z-index: <%- z1 %>;" width="<%- dx %>" height="<%- dy %>" viewbox="0 0 <%- dx %> <%- dy %>" xmlns="http://www.w3.org/2000/svg">
         <polygon points="<%- points %>" fill="none" stroke="black" />
       </svg>
-      <div class="tooltip-root"><div class="tooltip">
+      <div class="tooltip-root"><div class="tooltip <%- hideTranslation %>">
         <div class="translation"><%= translationHTML %></div>
         <div class="original"><%= textHTML %></div>
-        <div class="small">
+        <div class="attribution">
           <img src="translated-by-google.png"><span> (<%- srcLang %> \u2192 <%- destLang %>)</span>
         </div>
-        <div class="small">
+        <div class="openGT">
           <a href="https://translate.google.com/#<%- linkParams %>" target="_blank" rel="noopener" onclick="openGoogleTranslate(event)">open in Google Translate</a>
         </div>
       </div></div>
     </label>
+  `,
+  charCount: `
+    <div>Translation aborted: Maximum character count of <%- maxCharCount %> exceeded.</div>
   `
 });
 
@@ -68,11 +76,12 @@ function generateAnnotation({translation, text, vertices, srcLang, destLang}) {
   const translationHTML = html.escapeBR(translation);
   const textHTML = html.escapeBR(text);
   const linkParams = [srcLang, destLang, text].map(encodeURIComponent).join('|');
-  return {z1, x1, y1, dx, dy, points, translationHTML, textHTML, srcLang, destLang, linkParams};
+  const hideTranslation = translation.length ? '' : 'hide-translation';
+  return {z1, x1, y1, dx, dy, points, translationHTML, textHTML, srcLang, destLang, linkParams, hideTranslation};
 }
 
 function generateHTML(options) {
-  const {annotations, imageData} = options;
+  const {annotations, imageData, warningsHTML} = options;
   const annotationsData = annotations.map(generateAnnotation);
   const zs = annotationsData.map(o => o.z1).sort((a, b) => a - b);
   annotationsData.forEach(o => {
@@ -83,15 +92,26 @@ function generateHTML(options) {
   if (!mimeType || !(/^image\//.test(mimeType))) mimeType = 'application/octet-stream';
   const imageURI = `data:${mimeType};base64,${imageData.toString('base64')}`;
   const imageHTML = templates.image({imageURI, annotationsHTML});
-  const resultsHTML = templates.html({imageHTML, navbar: html.navbar});
+  const resultsHTML = templates.html({imageHTML, navbar: html.navbar, warningsHTML});
   return resultsHTML;
 }
 
 async function results({imageData, srcLang, destLang, ip}) {
+  let warningsHTML = '';
   const keys = await cache.getKeys(imageData);
   const annotations = await ocr.ocr({keys, imageData, srcLang, ip});
-  await translate.translate({keys, annotations, srcLang, destLang, ip});
-  const resultsHTML = generateHTML({annotations, imageData});
+  const charCount = annotations.map(x => x.text).join('').length;
+  if (charCount <= maxCharCount) {
+    await translate.translate({keys, annotations, srcLang, destLang, ip});
+  } else {
+    warningsHTML += templates.charCount({maxCharCount});
+    annotations.forEach(x => {
+      x.translation = '';
+      x.srcLang = srcLang;
+      x.destLang = destLang;
+    });
+  }
+  const resultsHTML = generateHTML({annotations, imageData, warningsHTML});
   return {html: resultsHTML, keys};
 }
 
