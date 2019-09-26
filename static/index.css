@@ -7,7 +7,8 @@ body {
 form {
   background: #fbfbfb;
   padding: 10px;
-  border-radius: 10px;
+  border-radius: 5px;
+  box-shadow: 4px 4px 6px black;
   display: flex;
   flex-direction: column;
   min-width: 800px;
@@ -16,17 +17,21 @@ h1 {
   font-size: 20pt;
 }
 h1, section {
-  margin: 5px 5px 15px;
+  margin: 5px 5px 10px;
 }
 label {
   display: flex;
   flex-direction: column;
   font-size: 12pt;
   flex: auto;
+  margin: 5px 0;
 }
 input, select, button {
   margin: 5px;
   font-size: 12pt;
+}
+select {
+  min-height: 1.5em;
 }
 .imagepreview > * {
   margin: 5px;
