@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const got = require('got');
+const _ = require('lodash');
 const index = require('./index');
 const results = require('./results');
 
@@ -24,7 +25,17 @@ app.post('/results', upload.single('image'), (req, res, next) => (async () => {
   } else if (req.body.imageB64) {
     imageData = Buffer.from(req.body.imageB64.replace(/^.*,/, ''), 'base64');
   } else if (req.body.imageURL) {
-    imageData = (await got(req.body.imageURL, {encoding: null})).body;
+    const {imageURL} = req.body;
+    if (!/^https?:/i.test(imageURL)) {
+      return res.status(400).send(`Invalid URL: ${_.escape(imageURL)}`);
+    }
+    try {
+      imageData = (await got(imageURL, {encoding: null})).body;
+    } catch(err) {
+      return res.status(404).send(
+        (err.statusCode ? `Error ${+err.statusCode}` : 'Connection error') + ` from ${_.escape(imageURL)}`
+      );
+    }
   } else {
     return res.status(400).send('Error: No image posted.');
   }
