@@ -2,6 +2,7 @@ const html = require('./html');
 const translate = require('./translate');
 
 const topLanguages = ['en', 'ja'];
+const fieldCount = 5;
 
 const templates = html.makeTemplates({
   html: `
@@ -83,4 +84,4 @@ async function index() {
   return {html: indexHTML};
 }
 
-module.exports = {index};
+module.exports = {index, fieldCount};

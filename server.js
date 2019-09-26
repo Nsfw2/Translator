@@ -7,9 +7,16 @@ const results = require('./results');
 const translate = require('./translate');
 
 const staticPath = './static';
+const maxFileSize = (10 << 20);
 
+const limits = {
+  fields: index.fieldCount - 1,
+  files: 1,
+  fileSize: maxFileSize,
+  fieldSize: Math.ceil(maxFileSize*(8/6))
+};
 const storage = multer.memoryStorage();
-const upload = multer({storage});
+const upload = multer({storage, limits});
 
 const app = express();
 const port = +(process.argv[2] || 80);
