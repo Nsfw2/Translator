@@ -53,27 +53,30 @@ app.post('/results', upload.single('image'), (req, res, next) => (async () => {
     imageData = Buffer.from(req.body.imageB64.replace(/^.*,/, ''), 'base64');
   } else if (req.body.imageURL) {
     const {imageURL} = req.body;
-    if (!/^https?:/i.test(imageURL)) {
-      return res.status(400).send(`Invalid URL: ${_.escape(imageURL)}`);
-    }
-    try {
-      const resURL = await fetch(imageURL, {size: maxFileSize});
-      if (resURL.ok) {
-        imageData = await resURL.buffer();
-      } else {
-        return res.status(404).send(
-          `${+resURL.status} ${_.escape(resURL.statusText)} from ${_.escape(imageURL)}`
-        );
-      }
-    } catch(err) {
-      if (err instanceof fetch.FetchError) {
-        if (err.type === 'max-size') {
-          res.status(413).send('Error: File too large');
+    if (/^https?:/i.test(imageURL)) {
+      try {
+        const resURL = await fetch(imageURL, {size: maxFileSize});
+        if (resURL.ok) {
+          imageData = await resURL.buffer();
         } else {
-          res.status(404).send(`Error: ${_.escape(err.message)}`);
+          return res.status(404).send(
+            `${+resURL.status} ${_.escape(resURL.statusText)} from ${_.escape(imageURL)}`
+          );
         }
+      } catch(err) {
+        if (err instanceof fetch.FetchError) {
+          if (err.type === 'max-size') {
+            res.status(413).send('Error: File too large');
+          } else {
+            res.status(404).send(`Error: ${_.escape(err.message)}`);
+          }
+        }
+        throw err;
       }
-      throw err;
+    } else if (/^data:[^,]*;base64,/i.test(imageURL)) {
+      imageData = Buffer.from(decodeURIComponent(imageURL.replace(/^.*,/, '')), 'base64');
+    } else {
+      return res.status(400).send(`Unsupported URL type: ${_.escape(imageURL)}`);
     }
   } else {
     return res.status(400).send('Error: No image posted.');
