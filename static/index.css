@@ -11,7 +11,9 @@ form {
   box-shadow: 4px 4px 6px black;
   display: flex;
   flex-direction: column;
-  min-width: 800px;
+  width: 800px;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 section {
   margin: 7px 5px;

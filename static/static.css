@@ -11,7 +11,16 @@ form {
   padding: 3px 10px;
   border-radius: 8px;
   box-shadow: 4px 4px 6px black;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+main {
+  max-width: 800px;
+}
+form {
   width: 800px;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 form,
 label {
@@ -35,4 +44,10 @@ textarea {
 code {
   display: inline-block;
   outline: 1px dotted black;
+}
+input {
+  font-size: 12pt;
+}
+input[type="submit"] {
+  padding: 5px;
 }
