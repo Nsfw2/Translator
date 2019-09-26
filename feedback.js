@@ -3,6 +3,7 @@ const html = require('./html');
 const throttle = require('./throttle');
 
 const logPath = './log';
+const maxLength = 10000;
 
 const templates = html.makeTemplates({
   form: `
@@ -17,7 +18,7 @@ const templates = html.makeTemplates({
         <h1>Feedback</h1>
         <label>
           <div>If you can have any problems or suggestions, type them here and I&#39;ll look into them.</div>
-          <textarea name="message"></textarea>
+          <textarea name="message" maxlength="<%- maxLength %>"></textarea>
         </label>
         <%= submit %>
       </form>
@@ -45,7 +46,7 @@ const templates = html.makeTemplates({
 function feedback(ip) {
   const issue = throttle.overCost('feedback', ip);
   const submit = issue ? templates.cooldown({message: templates.message({issue})}) : templates.submit();
-  const form = templates.form({navbar: html.navbar, submit});
+  const form = templates.form({navbar: html.navbar, submit, maxLength});
   return form;
 }
 
@@ -60,4 +61,4 @@ async function submit(data, ip) {
   return responseHTML;
 }
 
-module.exports = {feedback, submit};
+module.exports = {feedback, submit, maxLength};

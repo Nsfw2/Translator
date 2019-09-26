@@ -112,8 +112,10 @@ app.get('/feedback', (req, res) => {
   res.send(feedbackHTML);
 });
 
-app.post('/feedbackposted', express.urlencoded({extended: true}), (req, res, next) => (async () => {
+app.post('/feedbackposted', express.urlencoded({extended: false}), (req, res, next) => (async () => {
   const {message} = req.body;
+  if (typeof message !== 'string') return res.status(400).send('Invalid form data.');
+  if (message.length > feedback.maxLength) return res.status(413).send('Error: Message too long.');
   const responseHTML = await feedback.submit({message}, req.ip);
   res.send(responseHTML);
 })().catch(next));
