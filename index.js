@@ -2,6 +2,7 @@ const html = require('./html');
 const translate = require('./translate');
 
 const topLanguages = ['en', 'ja'];
+const fillableFields = ['imageURL', 'imageB64', 'imageB64Name', 'srcLang', 'destLang'];
 const fieldCount = 5;
 
 const templates = html.makeTemplates({
@@ -31,12 +32,12 @@ const templates = html.makeTemplates({
           </label>
           <label>
             <div>Or paste a link to the image:</div>
-            <input name="imageURL" type="text">
+            <input name="imageURL" type="text" value="<%- imageURL %>">
           </label>
           <label>
             <div>Or drag and drop or paste an image.</div>
-            <input name="imageB64" type="hidden">
-            <input class="imageB64Name" type="hidden">
+            <input name="imageB64" type="hidden" value="<%- imageB64 %>">
+            <input class="imageB64Name" type="hidden" value="<%- imageB64Name %>">
           </label>
         </section>
         <section class="languages">
@@ -44,13 +45,13 @@ const templates = html.makeTemplates({
             <div>Translate from:</div>
             <select name="srcLang">
               <option value="auto">Auto-detect</option>
-              <%= langHTML %>
+              <%= srcLangHTML %>
             </select>
           </label>
           <label>
             <div>Translate to:</div>
             <select name="destLang">
-              <%= langHTML %>
+              <%= destLangHTML %>
             </select>
           </label>
         </section>
@@ -59,29 +60,33 @@ const templates = html.makeTemplates({
       </form>
     </body></html>
   `,
-  language: `<option value="<%- code %>"><%- name %></option>`
+  language: `<option value="<%- code %>" <%= selected %>><%- name %></option>`
 });
 
-function generateLangHTML(languages) {
+function generateLangHTML(languages, selectedLang) {
   let langHTML = '';
   const langMap = new Map(languages.map(lang => [lang.code, lang.name]));
   topLanguages.forEach(code => {
     const name = langMap.get(code);
-    if (name) langHTML += templates.language({code, name});
+    const selected = (code === selectedLang) ? 'selected' : '';
+    if (name) langHTML += templates.language({code, name, selected});
   });
   languages.forEach(lang => {
     if (!topLanguages.includes(lang.code)) {
-      langHTML += templates.language(lang);
+      const {code, name} = lang;
+      const selected = (code === selectedLang) ? 'selected' : '';
+      langHTML += templates.language({code, name, selected});
     }
   });
   return langHTML;
 }
 
-async function index() {
+async function index({imageURL, imageB64, imageB64Name, srcLang, destLang}) {
   const languages = await translate.getLanguages();
-  const langHTML = generateLangHTML(languages);
-  const indexHTML = templates.html({langHTML, navbar: html.navbar});
+  const srcLangHTML = generateLangHTML(languages, srcLang);
+  const destLangHTML = generateLangHTML(languages, destLang);
+  const indexHTML = templates.html({imageURL, imageB64, imageB64Name, srcLangHTML, destLangHTML, navbar: html.navbar});
   return {html: indexHTML};
 }
 
-module.exports = {index, fieldCount};
+module.exports = {index, fillableFields, fieldCount};

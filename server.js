@@ -24,8 +24,19 @@ const upload = multer({storage, limits});
 const app = express();
 const port = +(process.argv[2] || 80);
 
+function parseQuery(keys, query) {
+  const output = {};
+  keys.forEach(k => {
+    if ((k in query) && (typeof query[k] === 'string')) {
+      output[k] = query[k];
+    }
+  });
+  return output;
+}
+
 app.get('/', (req, res, next) => (async () => {
-  const {html} = await index.index();
+  const queryData = parseQuery(index.fillableFields, req.query);
+  const {html} = await index.index(queryData);
   res.send(html);
 })().catch(next));
 
