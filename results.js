@@ -9,11 +9,12 @@ const templates = html.makeTemplates({
     <!doctype html><head>
       <meta charset="UTF-8">
       <title>Translation results</title>
+      <link href="common.css" rel="stylesheet">
       <link href="results.css" rel="stylesheet">
       <script src="results.js"></script>
     </head><body>
       <label class="annotation-reset-body" for="annotation-reset"></label>
-      <nav><%= navHTML %></nav>
+      <%= navbar %>
       <main>
         <label class="annotation-reset-main" for="annotation-reset"></label>
         <div class="image-container">
@@ -26,11 +27,8 @@ const templates = html.makeTemplates({
           </form>
         </div>
       </main>
-      <nav><%= navHTML %></nav>
+      <nav id="botnav"><a href=".">Translate another</a></nav>
     </body></html>
-  `,
-  nav: `
-    <a href=".">Translate another</a>
   `,
   annotation: `
     <label class="annotation" style="left: <%- x1 %>px; top: <%- y1 %>px;" onmouseup="handleSelection(this)">
@@ -79,17 +77,16 @@ function generateHTML(options) {
   let mimeType = (fileType(imageData) || {}).mime;
   if (!mimeType || !(/^image\//.test(mimeType))) mimeType = 'application/octet-stream';
   const imageURI = `data:${mimeType};base64,${imageData.toString('base64')}`;
-  const navHTML = templates.nav();
-  const html = templates.html({imageURI, annotationsHTML, navHTML});
-  return html;
+  const resultsHTML = templates.html({imageURI, annotationsHTML, navbar: html.navbar});
+  return resultsHTML;
 }
 
 async function results({imageData, srcLang, destLang}) {
   const keys = await cache.getKeys(imageData);
   const annotations = await ocr.ocr({keys, imageData, srcLang});
   await translate.translate({keys, annotations, srcLang, destLang});
-  const html = generateHTML({annotations, imageData});
-  return {html, keys};
+  const resultsHTML = generateHTML({annotations, imageData});
+  return {html: resultsHTML, keys};
 }
 
 module.exports = {results};

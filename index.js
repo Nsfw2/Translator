@@ -5,9 +5,11 @@ const templates = html.makeTemplates({
     <!doctype html><head>
       <meta charset="UTF-8">
       <title>Translate an image</title>
+      <link href="common.css" rel="stylesheet">
       <link href="index.css" rel="stylesheet">
       <script src="index.js"></script>
     </head><body>
+      <%= navbar %>
       <form action="." method="POST" enctype="multipart/form-data">
         <h1>Translate an image</h1>
         <section class="imageselect">
@@ -53,8 +55,8 @@ const templates = html.makeTemplates({
 });
 
 async function index() {
-  const html = templates.html();
-  return {html};
+  const indexHTML = templates.html({navbar: html.navbar});
+  return {html: indexHTML};
 }
 
 module.exports = {index};

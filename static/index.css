@@ -1,10 +1,10 @@
 body {
-  font-family: sans-serif;
-  background: #222;
   display: flex;
+  flex-direction: column;
   justify-content: center;
 }
 form {
+  align-self: center;
   background: #fbfbfb;
   padding: 10px;
   border-radius: 8px;

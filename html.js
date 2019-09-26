@@ -1,5 +1,14 @@
 const _ = require('lodash');
 
+const navbar = trim(`
+  <nav id="topnav">
+    <a href=".">Home</a>
+    <a href="about">About</a>
+    <a href="privacy">Privacy</a>
+    <a href="feedback">Feedback</a>
+  </nav>
+`);
+
 function trim(text) {
   return text.replace(/\n\s*/g, '');
 }
@@ -15,4 +24,4 @@ function escapeBR(text) {
   return _.escape(text).replace(/\n/g, '<br>');
 }
 
-module.exports = {makeTemplates, escapeBR};
+module.exports = {navbar, makeTemplates, escapeBR};
