@@ -59,6 +59,15 @@ app.post('/results', upload.single('image'), (req, res, next) => (async () => {
 
 app.use(express.static(staticPath));
 
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    const code = ['LIMIT_FILE_SIZE', 'LIMIT_FIELD_VALUE'].includes(err.code) ? 413 : 400;
+    res.status(code).send(`Error: ${_.escape(err.message)}`);
+  } else {
+    next(err);
+  }
+});
+
 app.listen(port, (err) => {
   if (err) {
     return console.error(err);
