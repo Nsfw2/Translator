@@ -1,5 +1,4 @@
-//const timeWindow = 3600*1000;
-const timeWindow = 60*1000;
+const timeWindow = 3600*1000;
 
 const thresholds = {
   feedback: [{octets: 0, cost: 40}, {octets: 3, cost: 4}]
@@ -9,7 +8,7 @@ const log = {};
 
 function addCost(bucket, ip, cost) {
   const time = Date.now();
-  if (!(bucket in log)) log[bucket] = {};
+  if (!(bucket in log)) log[bucket] = [];
   log[bucket].push({ip, cost, time});
   while (log[bucket][0] && log[bucket][0].time <= time - timeWindow) {
     log[bucket].shift();

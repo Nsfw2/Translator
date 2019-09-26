@@ -32,7 +32,8 @@ form > * {
   margin: 12px 0;
 }
 form > label,
-form > input {
+form > input,
+.cooldown {
   margin: 0 0 12px;
 }
 h1 {
@@ -50,4 +51,7 @@ input {
 }
 input[type="submit"] {
   padding: 5px;
+}
+.cooldown {
+  color: red;
 }

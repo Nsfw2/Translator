@@ -98,7 +98,7 @@ app.post('/results', upload.single('image'), (req, res, next) => (async () => {
   res.send(html);
 })().catch(next));
 
-app.get(['/tools', '/privacy', '/feedback'], (req, res, next) => (async () => {
+app.get(['/tools', '/privacy'], (req, res, next) => (async () => {
   const template = await fsPromises.readFile(`${htmlPath}${req.path}`, {encoding: 'utf-8'});
   const templateHTML = _.template(html.trim(template))({
     navbar: html.navbar,
@@ -107,10 +107,15 @@ app.get(['/tools', '/privacy', '/feedback'], (req, res, next) => (async () => {
   res.send(templateHTML);
 })().catch(next));
 
+app.get('/feedback', (req, res) => {
+  const feedbackHTML = feedback.feedback(req.ip);
+  res.send(feedbackHTML);
+});
+
 app.post('/feedbackposted', express.urlencoded({extended: true}), (req, res, next) => (async () => {
   const {message} = req.body;
-  const {html} = await feedback.submit({message});
-  res.send(html);
+  const responseHTML = await feedback.submit({message}, req.ip);
+  res.send(responseHTML);
 })().catch(next));
 
 app.use(express.static(staticPath));
