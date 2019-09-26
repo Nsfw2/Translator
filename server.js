@@ -2,11 +2,14 @@ const express = require('express');
 const multer = require('multer');
 const fetch = require('node-fetch');
 const _ = require('lodash');
+const fsPromises = require('fs').promises;
 const index = require('./index');
 const results = require('./results');
 const translate = require('./translate');
+const html = require('./html');
 
 const staticPath = './static';
+const htmlPath = './html';
 const maxFileSize = (10 << 20);
 
 const limits = {
@@ -74,6 +77,12 @@ app.post('/results', upload.single('image'), (req, res, next) => (async () => {
   }
   const {html} = await results.results({imageData, srcLang, destLang});
   res.send(html);
+})().catch(next));
+
+app.get(['/tools', '/privacy', '/feedback'], (req, res, next) => (async () => {
+  const template = await fsPromises.readFile(`${htmlPath}${req.path}`, {encoding: 'utf-8'});
+  const templateHTML = _.template(html.trim(template))({navbar: html.navbar});
+  res.send(templateHTML);
 })().catch(next));
 
 app.use(express.static(staticPath));

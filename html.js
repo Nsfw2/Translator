@@ -24,4 +24,4 @@ function escapeBR(text) {
   return _.escape(text).replace(/\n/g, '<br>');
 }
 
-module.exports = {navbar, makeTemplates, escapeBR};
+module.exports = {navbar, trim, makeTemplates, escapeBR};
