@@ -1,5 +1,3 @@
-var pending;
-
 var sel = {
   file: 'input[name=image]',
   fileB64: 'input[name=imageB64]',
@@ -74,14 +72,14 @@ document.onpaste = function(e) {
   var file = e.clipboardData.items[0].getAsFile();
   var name = (file.name || 'Pasted Image');
   setFile(file, name);
-}
+};
 
 document.addEventListener('DOMContentLoaded', function() {
   var file;
   if ((file = $(sel.file).files[0])) {
     showPreview(file);
   } else if ((file = $(sel.fileB64).value)) {
-    var name = $(sel.fileB64Name).value
+    var name = $(sel.fileB64Name).value;
     showPreview(file, name);
   }
 });
