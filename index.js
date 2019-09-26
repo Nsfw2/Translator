@@ -29,7 +29,7 @@ const templates = {
             <input name="imageURL" type="text">
           </label>
           <label>
-            <div>Or drag and drop an image.</div>
+            <div>Or drag and drop or paste an image.</div>
             <input name="imageB64" type="hidden">
             <input class="imageB64Name" type="hidden">
           </label>

@@ -43,13 +43,13 @@ function clearFile() {
   input2.hidden = false;
 }
 
-function setFile(file) {
+function setFile(file, name) {
   var reader = new FileReader();
   reader.onload = function() {
     replaceFileInput();
     $(sel.fileB64).value = reader.result;
-    $(sel.fileB64Name).value = file.name;
-    showPreview(file);
+    $(sel.fileB64Name).value = (name || file.name);
+    showPreview(file, name);
   };
   reader.readAsDataURL(file);
 }
@@ -66,6 +66,15 @@ document.ondrop = function(e) {
   e.preventDefault();
   setFile(file);
 };
+
+document.onpaste = function(e) {
+  if (!e.clipboardData.items) return;
+  var item = e.clipboardData.items[0];
+  if (!(item && item.kind === 'file')) return;
+  var file = e.clipboardData.items[0].getAsFile();
+  var name = (file.name || 'Pasted Image');
+  setFile(file, name);
+}
 
 document.addEventListener('DOMContentLoaded', function() {
   var file;
