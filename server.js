@@ -6,6 +6,7 @@ const fsPromises = require('fs').promises;
 const index = require('./index');
 const results = require('./results');
 const translate = require('./translate');
+const feedback = require('./feedback');
 const html = require('./html');
 
 const staticPath = './static';
@@ -104,6 +105,12 @@ app.get(['/tools', '/privacy', '/feedback'], (req, res, next) => (async () => {
     host: serverHostname
   });
   res.send(templateHTML);
+})().catch(next));
+
+app.post('/feedbackposted', express.urlencoded({extended: true}), (req, res, next) => (async () => {
+  const {message} = req.body;
+  const {html} = await feedback.submit({message});
+  res.send(html);
 })().catch(next));
 
 app.use(express.static(staticPath));

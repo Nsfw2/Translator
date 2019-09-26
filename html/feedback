@@ -9,7 +9,7 @@
     <h1>Feedback</h1>
     <label>
       <div>If you can have any problems or suggestions, type them here and I&#39;ll look into them.</div>
-      <textarea></textarea>
+      <textarea name="message"></textarea>
     </label>
     <input type="submit">
   </form>
