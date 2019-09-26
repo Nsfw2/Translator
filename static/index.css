@@ -24,7 +24,7 @@ label {
   font-size: 12pt;
   flex: auto;
 }
-input, select {
+input, select, button {
   margin: 5px;
   font-size: 12pt;
 }
@@ -36,6 +36,7 @@ input, select {
   border: 0;
   padding: 0;
   cursor: pointer;
+  background: none;
 }
 .imagepreview > img {
   max-height: 64px;
