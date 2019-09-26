@@ -68,8 +68,12 @@ app.use(express.static(staticPath));
 
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {
-    const code = ['LIMIT_FILE_SIZE', 'LIMIT_FIELD_VALUE'].includes(err.code) ? 413 : 400;
-    res.status(code).send(`Error: ${_.escape(err.message)}`);
+    if (err.code === 'LIMIT_FILE_SIZE' || (err.code === 'LIMIT_FIELD_VALUE' && err.field === 'imageB64')) {
+      res.status(413).send('Error: File too large');
+    } else {
+      const code = (err.code === 'LIMIT_FIELD_VALUE') ? 413 : 400;
+      res.status(code).send(`Error: ${_.escape(err.message)}`);
+    }
   } else {
     next(err);
   }
