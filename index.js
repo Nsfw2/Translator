@@ -11,7 +11,10 @@ const templates = html.makeTemplates({
     </head><body>
       <%= navbar %>
       <form action="." method="POST" enctype="multipart/form-data">
-        <h1>Translate an image</h1>
+        <section class="about">
+          <h1>Translate an image</h1>
+          <div class="small">Powered by Google&#39;s <a href="https://cloud.google.com/vision/">Vision</a> and <a href="https://cloud.google.com/translate/">Translation</a> APIs</div>
+        </section>
         <section class="imageselect">
           <label>
             <div>Choose an image from your computer:</div>

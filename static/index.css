@@ -13,11 +13,16 @@ form {
   flex-direction: column;
   min-width: 800px;
 }
+section {
+  margin: 5px 5px 10px;
+}
 h1 {
   font-size: 20pt;
+  margin: 0;
 }
-h1, section {
-  margin: 5px 5px 10px;
+.small {
+  font-size: 10pt;
+  margin: 5px 0;
 }
 label {
   display: flex;
