@@ -84,8 +84,8 @@ function generateHTML(options) {
     o.z1 = zs.indexOf(o.z1) - zs.length;
   });
   const annotationsHTML = annotationsData.map(templates.annotation).join('');
-  let mimeType = fileType(imageData).mime;
-  if (!(/^image\//.test(mimeType))) mimeType = 'application/octet-stream';
+  let mimeType = (fileType(imageData) || {}).mime;
+  if (!mimeType || !(/^image\//.test(mimeType))) mimeType = 'application/octet-stream';
   const imageURI = `data:${mimeType};base64,${imageData.toString('base64')}`;
   const navHTML = templates.nav();
   const html = templates.html({imageURI, annotationsHTML, navHTML});
