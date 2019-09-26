@@ -21,6 +21,8 @@ app.post('/', upload.single('image'), (req, res, next) => (async () => {
   let imageData;
   if (req.file) {
     imageData = req.file.buffer;
+  } else if (req.body.imageB64) {
+    imageData = Buffer.from(req.body.imageB64.replace(/^.*,/, ''), 'base64');
   } else if (req.body.imageURL) {
     imageData = (await got(req.body.imageURL, {encoding: null})).body;
   } else {

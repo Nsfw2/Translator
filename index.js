@@ -10,19 +10,29 @@ const templates = {
       <meta charset="UTF-8">
       <title>Translate an image</title>
       <link href="index.css" rel="stylesheet">
+      <script src="index.js"></script>
     </head><body>
       <form action="." method="POST" enctype="multipart/form-data">
         <h1>Translate an image</h1>
         <section class="imageselect">
           <label>
             <div>Choose an image from your computer:</div>
-            <input name="image" type="file">
+            <input name="image" type="file" onchange="fileInputChanged(this)">
+            <div class="imagepreview" hidden>
+              <button type="button" onclick="clearFile()">\xd7</button>
+              <img>
+              <span class="imagepreview-filename"></span>
+            </div>
           </label>
           <label>
             <div>Or paste a link to the image:</div>
             <input name="imageURL" type="text">
           </label>
-          <label>Or drag and drop an image.</label>
+          <label>
+            <div>Or drag and drop an image.</div>
+            <input name="imageB64" type="hidden">
+            <input class="imageB64Name" type="hidden">
+          </label>
         </section>
         <section class="languages">
           <label>
