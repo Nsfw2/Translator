@@ -13,15 +13,17 @@ const templates = html.makeTemplates({
       <link href="results.css" rel="stylesheet">
       <script src="results.js"></script>
     </head><body>
-      <label class="annotation-reset-body" for="annotation-reset"></label>
-      <%= navbar %>
-      <main>
-        <label class="annotation-reset-main" for="annotation-reset"></label>
-        <div class="image-container">
-          <%= imageHTML %>
-        </div>
-      </main>
-      <nav id="botnav"><a href=".">Translate another</a></nav>
+      <div>
+        <label class="annotation-reset-body" for="annotation-reset"></label>
+        <%= navbar %>
+        <main>
+          <label class="annotation-reset-main" for="annotation-reset"></label>
+          <div class="image-container">
+            <%= imageHTML %>
+          </div>
+        </main>
+        <nav id="botnav"><a href=".">Translate another</a></nav>
+      </div>
     </body></html>
   `,
   image: `
