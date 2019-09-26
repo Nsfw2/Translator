@@ -4,6 +4,7 @@ const got = require('got');
 const _ = require('lodash');
 const index = require('./index');
 const results = require('./results');
+const translate = require('./translate');
 
 const staticPath = './static';
 
@@ -40,6 +41,14 @@ app.post('/results', upload.single('image'), (req, res, next) => (async () => {
     return res.status(400).send('Error: No image posted.');
   }
   const {srcLang, destLang} = req.body;
+  const languages = await translate.getLanguages();
+  const languageCodes = new Set(languages.map(lang => lang.code));
+  if (srcLang !== 'auto' && !languageCodes.has(srcLang)) {
+    return res.status(400).send(`Invalid source language: ${_.escape(srcLang)}`);
+  }
+  if (!languageCodes.has(destLang)) {
+    return res.status(400).send(`Invalid destination language: ${_.escape(destLang)}`);
+  }
   const {html} = await results.results({imageData, srcLang, destLang});
   res.send(html);
 })().catch(next));
