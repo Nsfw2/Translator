@@ -79,7 +79,28 @@ document.onpaste = function(e) {
   setFile(file, name);
 };
 
-document.addEventListener('DOMContentLoaded', function() {
+function parseHash() {
+  var inputs = document.querySelectorAll('input[type=text], input[type=hidden], select');
+  var i;
+  var names = [];
+  var namedInputs = [];
+  for (i = 0; i < inputs.length; i++) {
+    names.push(inputs[i].name);
+    namedInputs.push(inputs[i]);
+  }
+  var hashParts = location.hash.replace(/^#/, '').split('&');
+  for (i = 0; i < hashParts.length; i++) {
+    var keyVal = hashParts[i].split('=');
+    if (keyVal.length === 2) {
+      var j = names.indexOf(keyVal[0]);
+      if (j >= 0) {
+        namedInputs[j].value = decodeURIComponent(keyVal[1]);
+      }
+    }
+  }
+}
+
+function initPreview() {
   var file;
   if ((file = $(sel.file).files[0])) {
     showPreview(file);
@@ -87,4 +108,9 @@ document.addEventListener('DOMContentLoaded', function() {
     var name = $(sel.fileB64Name).value;
     showPreview(file, name);
   }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  parseHash();
+  initPreview();
 });
