@@ -80,28 +80,6 @@ document.onpaste = function(e) {
   setFile(file, name);
 };
 
-function ajaxSubmit(el, e) {
-  e.preventDefault();
-  var form = new FormData(el);
-  var req = new XMLHttpRequest();
-  req.open('POST', 'results', true);
-  req.responseType = 'document';
-  req.onloadend = function() {
-    if (req.status === 200) {
-      document.replaceChild(req.response.documentElement, document.documentElement);
-      el.hidden = true;
-      document.body.appendChild(el);
-      history.replaceState(null, '', 'results');
-    } else {
-      var error = (req.response && req.response.documentElement) ? req.response.documentElement.textContent : 'Connection Error';
-      var output = $(sel.output);
-      output.textContent = error;
-      output.hidden = false;
-    }
-  };
-  req.send(form);
-}
-
 function parseHash() {
   var inputs = document.querySelectorAll('input[type=text], input[type=hidden], select');
   var i;
@@ -131,10 +109,6 @@ function initPreview() {
     var name = $(sel.fileB64Name).value;
     showPreview(file, name);
   }
-}
-
-if (/\/results/g.test(location.pathname)) {
-  history.replaceState(null, '', '.');
 }
 
 document.addEventListener('DOMContentLoaded', function() {

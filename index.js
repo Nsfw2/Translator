@@ -11,10 +11,9 @@ const templates = html.makeTemplates({
       <link href="common.css" rel="stylesheet">
       <link href="index.css" rel="stylesheet">
       <script src="index.js"></script>
-      <script src="results.js"></script>
     </head><body>
       <%= navbar %>
-      <form action="results" method="POST" enctype="multipart/form-data" onsubmit="ajaxSubmit(this, event)">
+      <form action="results" method="POST" enctype="multipart/form-data">
         <section class="about">
           <h1>Translate an image</h1>
           <div class="small">Powered by Google&#39;s <a href="https://cloud.google.com/vision/">Vision</a> and <a href="https://cloud.google.com/translate/">Translation</a> APIs</div>
