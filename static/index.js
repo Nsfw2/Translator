@@ -21,8 +21,13 @@ function showPreview(file, name) {
 }
 
 function fileInputChanged(el) {
-  $(sel.fileB64).value = '';
-  showPreview(el.files[0]);
+  var file = el.files[0];
+  if (file) {
+    $(sel.fileB64).value = '';
+    showPreview(file);
+  } else {
+    clearFile();
+  }
 }
 
 function replaceFileInput() {
