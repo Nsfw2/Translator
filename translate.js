@@ -1,10 +1,13 @@
-const {Translate} = require('@google-cloud/translate');
+const fs = require('fs');
+const {TranslationServiceClient} = require('@google-cloud/translate').v3beta1;
 const cache = require('./cache');
 const throttle = require('./throttle');
 
-const client = new Translate({
-  keyFilename: '../keys/google_application_credentials.json'
-});
+const keyFilename = '../keys/google_application_credentials.json';
+
+const client = new TranslationServiceClient({keyFilename});
+const projectId = JSON.parse(fs.readFileSync(keyFilename, {encoding: 'utf-8'})).project_id;
+const parent = client.locationPath(projectId, 'global');
 
 function computeCost(text) {
   return 0.02 * text.join('').length;
@@ -12,24 +15,30 @@ function computeCost(text) {
 
 async function translate({keys, annotations, srcLang, destLang, ip}) {
   const text = annotations.map(x => x.text);
-  const from = (srcLang === 'auto') ? undefined : srcLang;
   if (!text.length) {
     return annotations;
   }
   const cost = computeCost(text);
+  const request = {
+    parent,
+    contents: text,
+    mimeType: 'text/plain',
+    sourceLanguageCode: ((srcLang === 'auto') ? undefined : srcLang),
+    targetLanguageCode: destLang
+  };
   const translations = await cache.writeJSON(
     keys,
     `t.${srcLang}.${destLang}.json`,
     text,
     async () => {
       throttle.addCost('cloud', ip, cost);
-      return client.translate(text, {from, to: destLang});
+      return client.translateText(request);
     }
   );
-  translations[1].data.translations.forEach((result, i) => {
+  translations[0].translations.forEach((result, i) => {
     if (annotations[i]) {
       annotations[i].translation = result.translatedText;
-      annotations[i].srcLang = (srcLang === 'auto') ? result.detectedSourceLanguage : srcLang;
+      annotations[i].srcLang = (srcLang === 'auto') ? result.detectedLanguageCode : srcLang;
       annotations[i].destLang = destLang;
     }
   });
@@ -41,9 +50,9 @@ async function getLanguages() {
     null,
     `lang.json`,
     null,
-    () => client.getLanguages()
+    () => client.getSupportedLanguages({parent, displayLanguageCode: 'en'})
   );
-  return languages[0];
+  return languages[0].languages.map(x => ({code: x.languageCode, name: x.displayName}));
 }
 
 module.exports = {translate, getLanguages};
