@@ -150,9 +150,12 @@ app.use((err, req, res, next) => {
   }
 });
 
-app.listen(port, (err) => {
+const server = app.listen(port, (err) => {
   if (err) {
     return console.error(err);
   }
   console.log(`listening on port ${port}`);
 });
+
+process.on('SIGTERM', () => server.close());
+process.on('SIGINT', () => server.close());
