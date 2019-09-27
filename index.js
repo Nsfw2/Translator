@@ -1,10 +1,11 @@
 const html = require('./html');
 const translate = require('./translate');
 const throttle = require('./throttle');
+const hcaptcha = require('./hcaptcha');
 
 const topLanguages = ['en', 'ja'];
 const fillableFields = ['imageURL', 'imageB64', 'imageB64Name', 'srcLang', 'destLang'];
-const fieldCount = 5;
+const fieldCount = 7;
 
 const templates = html.makeTemplates({
   html: `
@@ -56,19 +57,15 @@ const templates = html.makeTemplates({
             </select>
           </label>
         </section>
-        <%= submit %>
+        <section class="verifysubmit" <%= submitHidden %>>
+          <%= captchaHTML %>
+          <input value="Submit" type="submit">
+        </section>
+        <output <%= outputHidden %>><%= message %></output>
       </form>
     </body></html>
   `,
   language: `<option value="<%- code %>" <%= selected %>><%- name %></option>`,
-  submit: `
-    <input value="Submit" type="submit">
-    <output hidden></output>
-  `,
-  cooldown: `
-    <input value="Submit" type="submit" hidden>
-    <output><%= message %></output>
-  `,
   message: `Image translation is temporarily unavailable due to <%- issue %>. Try again in about an hour.`
 });
 
@@ -94,8 +91,12 @@ async function index({imageURL, imageB64, imageB64Name, srcLang, destLang, ip}) 
   const languages = await translate.getLanguages();
   const srcLangHTML = generateLangHTML(languages, srcLang);
   const destLangHTML = generateLangHTML(languages, destLang);
-  const submit = throttle.replaceSubmit('cloud', ip, templates);
-  const indexHTML = templates.html({imageURL, imageB64, imageB64Name, srcLangHTML, destLangHTML, navbar: html.navbar, submit});
+  const captchaHTML = hcaptcha.widget();
+  const issue = throttle.overCost('cloud', ip);
+  const submitHidden = issue ? 'hidden' : '';
+  const outputHidden = issue ? '' : 'hidden';
+  const message = issue ? templates.message({issue}) : '';
+  const indexHTML = templates.html({imageURL, imageB64, imageB64Name, srcLangHTML, destLangHTML, navbar: html.navbar, captchaHTML, submitHidden, outputHidden, message});
   return {html: indexHTML};
 }
 
