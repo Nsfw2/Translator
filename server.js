@@ -71,9 +71,9 @@ app.post('/results', upload.single('image'), (req, res, next) => (async () => {
       } catch(err) {
         if (err instanceof fetch.FetchError) {
           if (err.type === 'max-size') {
-            res.status(413).send('Error: File too large');
+            return res.status(413).send('Error: File too large');
           } else {
-            res.status(404).send(`Error: ${_.escape(err.message)}`);
+            return res.status(404).send(`Error: ${_.escape(err.message)}`);
           }
         }
         throw err;
