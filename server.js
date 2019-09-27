@@ -117,6 +117,8 @@ app.get('/feedback', (req, res) => {
 });
 
 app.post('/feedbackposted', express.urlencoded({extended: false}), (req, res, next) => (async () => {
+  const issue = throttle.overCost('feedback', req.ip);
+  if (issue) return res.status(429).send(feedback.throttleMessage(issue));
   const {message} = req.body;
   if (typeof message !== 'string') return res.status(400).send('Invalid form data.');
   if (message.length > feedback.maxLength) return res.status(413).send('Error: Message too long.');

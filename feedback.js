@@ -50,8 +50,6 @@ function feedback(ip) {
 }
 
 async function submit(data, ip) {
-  const issue = throttle.overCost('feedback', ip);
-  if (issue) return templates.message({issue});
   throttle.addCost('feedback', ip, 1);
   data.time = Date.now();
   await fsPromises.mkdir(logPath, {recursive: true});
@@ -60,4 +58,8 @@ async function submit(data, ip) {
   return responseHTML;
 }
 
-module.exports = {feedback, submit, maxLength};
+function throttleMessage(issue) {
+  return templates.message({issue});
+}
+
+module.exports = {maxLength, feedback, submit, throttleMessage};
