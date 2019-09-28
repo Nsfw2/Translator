@@ -1,8 +1,7 @@
-const fsPromises = require('fs').promises;
+const log = require('./log').logger('feedback', {awaitSuccess: true});
 const html = require('./html');
 const throttle = require('./throttle');
 
-const logPath = './log';
 const maxLength = 10000;
 
 const templates = html.makeTemplates({
@@ -51,9 +50,7 @@ function feedback(ip) {
 
 async function submit(data, ip) {
   throttle.addCost('feedback', ip, 1);
-  data.time = Date.now();
-  await fsPromises.mkdir(logPath, {recursive: true});
-  await fsPromises.writeFile(`${logPath}/feedback`, JSON.stringify(data) + '\n', {flag: 'a'});
+  await log(data);
   const responseHTML = templates.response({navbar: html.navbar});
   return responseHTML;
 }
