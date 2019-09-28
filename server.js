@@ -28,6 +28,8 @@ const upload = multer({storage, limits});
 const app = express();
 const port = +(process.argv[2] || 3000);
 
+app.set('trust proxy', 'loopback');
+
 function parseQuery(keys, query) {
   const output = {};
   keys.forEach(k => {
