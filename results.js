@@ -122,7 +122,7 @@ function generateHTML(options) {
 async function results({imageData, srcLang, destLang, ip}) {
   let warningsHTML = '';
   const keys = await cache.getKeys(imageData);
-  const annotations = await ocr.ocr({keys, imageData, srcLang, ip});
+  const annotations = await ocr.ocr({keys, imageData, ip});
   const charCount = annotations.map(x => x.text).join('').length;
   if (charCount <= maxCharCount) {
     await translate.translate({keys, annotations, srcLang, destLang, ip});
