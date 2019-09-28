@@ -14,7 +14,7 @@ const hcaptcha = require('./hcaptcha');
 const staticPath = './static';
 const htmlPath = './html';
 const maxFileSize = (10 << 20);
-const serverHostname = 'http://localhost:8009/';
+const serverHostname = 'http://imagetranslate.site/';
 
 const limits = {
   fields: index.fieldCount - 1,
