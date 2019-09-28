@@ -1,4 +1,5 @@
 const fs = require('fs');
+const fsPromises = fs.promises;
 
 const logPath = './log';
 
@@ -6,7 +7,9 @@ fs.mkdirSync(logPath, {recursive: true});
 
 function logger(filename, options={}) {
   let {timeResolution, awaitSuccess} = options;
-  let stream;
+  let buffer = '';
+  let handle;
+  let writer;
 
   async function write(data) {
     let time = Date.now();
@@ -15,21 +18,26 @@ function logger(filename, options={}) {
     }
     data.time = time;
     data = JSON.stringify(data) + '\n';
-    if (!stream || stream.closed) {
-      stream = fs.createWriteStream(`${logPath}/${filename}`, {flag: 'a'});
-    }
-    return new Promise((resolve, reject) => {
-      function cb(err) {
-        stream.off('error', cb);
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
+    buffer += data;
+    if (writer) return writer;
+    writer = (async() => {
+      if (!handle) {
+        handle = await fsPromises.open(`${logPath}/${filename}`, 'a');
       }
-      stream.on('error', cb);
-      stream.write(data, 'utf8', cb);
+      try {
+        while(buffer) {
+          let b = buffer;
+          buffer = '';
+          await handle.appendFile(b);
+        }
+      } catch(err) {
+        await handle.close().catch(console.error);
+        handle = undefined;
+      }
+    })().finally(() => {
+      writer = undefined;
     });
+    return writer;
   }
 
   function log(data) {
