@@ -3,6 +3,7 @@ const cache = require('./cache');
 const ocr = require('./ocr');
 const translate = require('./translate');
 const html = require('./html');
+const log = require('./log').logger('results');
 
 const maxCharCount = 1000;
 
@@ -112,6 +113,7 @@ async function results({imageData, srcLang, destLang, ip}) {
     if (!x.destLang) x.destLang = destLang;
   });
   const resultsHTML = generateHTML({annotations, imageData, warningsHTML});
+  log({hash: keys.storage, charCount, srcLang, destLang});
   return {html: resultsHTML, keys};
 }
 

@@ -4,10 +4,11 @@ const logPath = './log';
 
 fs.mkdirSync(logPath, {recursive: true});
 
-function logger(filename, {timeResolution, awaitSuccess}) {
+function logger(filename, options={}) {
+  let {timeResolution, awaitSuccess} = options;
   let stream;
 
-  let write = async (data) => {
+  async function write(data) {
     let time = Date.now();
     if (timeResolution) {
       time = Math.floor(time / timeResolution) * timeResolution;
@@ -29,16 +30,14 @@ function logger(filename, {timeResolution, awaitSuccess}) {
       stream.on('error', cb);
       stream.write(data, 'utf8', cb);
     });
-  };
-
-  if (!awaitSuccess) {
-    write = (data) => {
-      // dispatch write job without awaiting
-      write(data).catch(console.error);
-    };
   }
 
-  return write;
+  function log(data) {
+    // dispatch write job without awaiting
+    write(data).catch(console.error);
+  }
+
+  return (awaitSuccess ? write : log);
 }
 
 module.exports = {logger};
