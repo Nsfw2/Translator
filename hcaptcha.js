@@ -25,7 +25,6 @@ async function verify(token) {
     const params = new URLSearchParams([['secret', secret], ['response', token]]);
     const response = await fetch('https://hcaptcha.com/siteverify', {method: 'POST', body: params});
     const json = await response.json();
-    if (!json.success) console.error(json);
     return !!json.success;
   } catch(err) {
     console.error(err);
