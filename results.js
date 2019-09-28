@@ -6,6 +6,7 @@ const html = require('./html');
 const log = require('./log').logger('results');
 
 const maxCharCount = 1000;
+const noSpaces = ['ja', 'zh-CN', 'zh-TW'];
 
 const templates = html.makeTemplates({
   html: `
@@ -54,15 +55,36 @@ const templates = html.makeTemplates({
           <img src="translated-by-google.png"><span> (<%- srcLang %> \u2192 <%- destLang %>)</span>
         </div>
         <div class="openGT">
-          <a href="https://translate.google.com/#<%- linkParams %>" target="_blank" rel="noopener" onclick="openGoogleTranslate(event)">open in Google Translate</a>
+          <%= linkHTML %>
         </div>
       </div></div>
     </label>
   `,
-  charCount: `
-    <div>Translation aborted: Maximum character count of <%- maxCharCount %> exceeded.</div>
-  `
+  translateLink: `<a href="<%- url %>" target="_blank" rel="noopener" onclick="openGoogleTranslate(event)"><%- label %></a>`,
+  charCount: `<div>Translation aborted: Maximum character count of <%- maxCharCount %> exceeded.</div>`
 });
+
+function googleTranslateLink({srcLang, destLang, text}) {
+  let linkParams = [srcLang, destLang, text].map(encodeURIComponent).join('|');
+  return `https://translate.google.com/#${linkParams}`;
+}
+
+function generateTranslateLinks({srcLang, destLang, text}) {
+  let linkHTML = '';
+  linkHTML += templates.translateLink({
+    url: googleTranslateLink({srcLang, destLang, text}),
+    label: 'open in Google Translate'
+  });
+  if (/\n/.test(text)) {
+    let joiner = (noSpaces.includes(srcLang) ? '' : ' ');
+    let textJoined = text.replace(/\n/g, joiner);
+    linkHTML += ' ' + templates.translateLink({
+      url: googleTranslateLink({srcLang, destLang, text: textJoined}),
+      label: '[join lines]'
+    });
+  }
+  return linkHTML;
+}
 
 function generateAnnotation({translation, text, vertices, srcLang, destLang}) {
   const xs = vertices.map(p => p.x);
@@ -76,9 +98,9 @@ function generateAnnotation({translation, text, vertices, srcLang, destLang}) {
   const points = vertices.map(p => `${p.x - x1},${p.y - y1}`).join(' ');
   const translationHTML = html.escapeBR(translation);
   const textHTML = html.escapeBR(text);
-  const linkParams = [srcLang, destLang, text].map(encodeURIComponent).join('|');
+  const linkHTML = generateTranslateLinks({srcLang, destLang, text});
   const hideTranslation = translation.length ? '' : 'hide-translation';
-  return {z1, x1, y1, dx, dy, points, translationHTML, textHTML, srcLang, destLang, linkParams, hideTranslation};
+  return {z1, x1, y1, dx, dy, points, translationHTML, textHTML, srcLang, destLang, linkHTML, hideTranslation};
 }
 
 function generateHTML(options) {
