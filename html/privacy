@@ -10,6 +10,8 @@
     <p>This website does not store the images you post. To reduce the cost of translating the same image for multiple users, it does cache the OCR and translation results from Google, but they are encrypted with a key based on the image so that I won&#39;t be tempted to read them. Logs are kept of the languages selected, the number of characters translated, and the hashes of images translated. Your IP address is stored for about an hour to prevent overuse of the service, after which it is deleted.</p>
     <p>Naturally, all images are sent to Google Cloud Platform for OCR and translation. You can read their policies <a href="https://cloud.google.com/security/privacy/">here</a>. Your IP address is not sent to Google unless you follow a link to the Google Translate or another Google site yourself.</p>
     <p>The data collected by hCaptcha is described <a href="https://docs.hcaptcha.com/faq">here</a>.</p>
-    <p>Ads on the site may track you with cookies or other methods for the purpose of serving better targeted ads. More specific details will be added when ads are set up.</p>
+    <p>Third party vendors, including Google, use cookies to serve ads based on a user's prior visits to your website or other websites. 
+      Google's use of advertising cookies enables it and its partners to serve ads to your users based on their visit to your sites and/or other sites on the Internet. 
+      Users may opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads">Ads Settings</a>.</p>
   </main>
 </body></html>
