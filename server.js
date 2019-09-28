@@ -152,7 +152,7 @@ app.use((err, req, res, next) => {
   }
 });
 
-const server = app.listen(port, (err) => {
+const server = app.listen(port, 'localhost', (err) => {
   if (err) {
     return console.error(err);
   }
