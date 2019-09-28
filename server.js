@@ -26,7 +26,7 @@ const storage = multer.memoryStorage();
 const upload = multer({storage, limits});
 
 const app = express();
-const port = +(process.argv[2] || 80);
+const port = +(process.argv[2] || 3000);
 
 function parseQuery(keys, query) {
   const output = {};
