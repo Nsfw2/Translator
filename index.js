@@ -15,7 +15,6 @@ const templates = html.makeTemplates({
       <link href="common.css" rel="stylesheet">
       <link href="index.css" rel="stylesheet">
       <script src="index.js"></script>
-      <script data-ad-client="ca-pub-7209242109535460" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     </head><body>
       <%= navbar %>
       <form action="results" method="POST" enctype="multipart/form-data">
