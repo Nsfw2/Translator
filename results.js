@@ -7,6 +7,7 @@ const log = require('./log').logger('results');
 
 const maxCharCount = 1000;
 const noSpaces = ['ja', 'zh-CN', 'zh-TW'];
+const srcSubstitutions = new Map([['zh-TW', 'zh-CN']]);
 
 const templates = html.makeTemplates({
   html: `
@@ -65,6 +66,7 @@ const templates = html.makeTemplates({
 });
 
 function googleTranslateLink({srcLang, destLang, text}) {
+  srcLang = (srcSubstitutions.get(srcLang) || srcLang);
   let linkParams = [srcLang, destLang, text].map(encodeURIComponent).join('|');
   return `https://translate.google.com/#${linkParams}`;
 }
