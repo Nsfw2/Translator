@@ -53,7 +53,7 @@ const templates = html.makeTemplates({
         <div class="translation"><%= translationHTML %></div>
         <div class="original"><%= textHTML %></div>
         <div class="attribution">
-          <img src="translated-by-google.png"><span> (<%- srcLang %> \u2192 <%- destLang %>)</span>
+          <a href="https://translate.google.com/" target="_blank" rel="noopener"><img src="translated-by-google.png"></a><span> (<%- srcLang %> \u2192 <%- destLang %>)</span>
         </div>
         <div class="openGT">
           <%= linkHTML %>

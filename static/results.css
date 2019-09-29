@@ -99,7 +99,7 @@ main {
 .openGT {
   font-size: 75%;
 }
-.attribution > img {
+.attribution > a > img {
   vertical-align: middle;
 }
 .tooltip.hide-translation > .attribution,
