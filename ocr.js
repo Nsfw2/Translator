@@ -1,12 +1,25 @@
+const fs = require('fs');
 const vision = require('@google-cloud/vision');
 const cache = require('./cache');
 const throttle = require('./throttle');
+
+const supportedLanguages = new Set(
+  fs.readFileSync('./ocr-supported.txt', {encoding: 'utf8'}).trim().split('\n')
+);
 
 const client = new vision.ImageAnnotatorClient({
   keyFilename: '../keys/google_application_credentials.json'
 });
 
 async function ocr({keys, imageData, srcLang, ip}) {
+  let lang2;
+  if (!supportedLanguages.has(srcLang)) {
+    if (supportedLanguages.has(lang2 = srcLang.split('-')[0])) {
+      srcLang = lang2;
+    } else {
+      srcLang = 'auto';
+    }
+  }
   const annotations = await cache.writeJSON(
     keys,
     `o.${srcLang}.json`,
