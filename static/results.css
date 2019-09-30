@@ -103,6 +103,6 @@ main {
   vertical-align: middle;
 }
 .tooltip.hide-translation > .attribution,
-.tooltip.hide-translation > translation {
+.tooltip.hide-translation > .translation {
   display: none;
 }
