@@ -1,25 +1,51 @@
+const fs = require('fs');
 const vision = require('@google-cloud/vision');
 const cache = require('./cache');
 const throttle = require('./throttle');
+
+const supportedLanguages = new Set(
+  fs.readFileSync('./ocr-supported.txt', {encoding: 'utf8'}).trim().split('\n')
+);
 
 const client = new vision.ImageAnnotatorClient({
   keyFilename: '../keys/google_application_credentials.json'
 });
 
+class NoResultsError extends Error {}
+
 async function ocr({keys, imageData, srcLang, ip}) {
-  const annotations = await cache.writeJSON(
-    keys,
-    `o.${srcLang}.json`,
-    null,
-    async () => {
-      throttle.addCost('cloud', ip, 1.5);
-      const languageHints = (srcLang === 'auto') ? undefined : [srcLang];
-      return client.documentTextDetection({
-        image: {content: imageData},
-        imageContext: {languageHints}
-      });
+  let lang2;
+  if (!supportedLanguages.has(srcLang)) {
+    if (supportedLanguages.has(lang2 = srcLang.split('-')[0])) {
+      srcLang = lang2;
+    } else {
+      srcLang = 'auto';
     }
-  );
+  }
+  let annotations;
+  try {
+    annotations = await cache.writeJSON(
+      keys,
+      `o.${srcLang}.json`,
+      null,
+      async () => {
+        throttle.addCost('cloud', ip, 1.5);
+        const languageHints = (srcLang === 'auto') ? undefined : [srcLang];
+        const result = await client.documentTextDetection({
+          image: {content: imageData},
+          imageContext: {languageHints}
+        });
+        if (!result[0].fullTextAnnotation) throw new NoResultsError();
+        return result;
+      }
+    );
+  } catch(err) {
+    if (err instanceof NoResultsError) {
+      return [];
+    } else {
+      throw err;
+    }
+  }
   return processParagraphs(annotations);
 }
 
