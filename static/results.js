@@ -1,6 +1,6 @@
-function openTranslate(e) {
+function openTranslate(el, e) {
   if (e.button || e.shiftKey || e.ctrlKey || e.altKey || e.metaKey) return;
-  window.open(e.target.href, 'translate', 'height=500,width=800').focus();
+  window.open(el.href, el.hostname, el.dataset.size).focus();
   e.preventDefault();
 }
 

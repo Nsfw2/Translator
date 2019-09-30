@@ -2,6 +2,7 @@ const fileType = require('file-type');
 const cache = require('./cache');
 const ocr = require('./ocr');
 const translate = require('./translate');
+const {translators} = require('./translators');
 const html = require('./html');
 const log = require('./log').logger('results');
 
@@ -10,7 +11,6 @@ const maxCounts = {
   paragraph: 100   // maximum allowed in one request by Microsoft
 };
 const noSpaces = ['ja', 'yue', 'zh-Hans', 'zh-Hant'];
-const srcSubstitutions = new Map([['auto', '']]);
 
 const templates = html.makeTemplates({
   html: `
@@ -58,37 +58,37 @@ const templates = html.makeTemplates({
           <span>Translated from <%- srcLangName %> by</span><a href="http://aka.ms/MicrosoftTranslatorAttribution" target="_blank" rel="noopener"><img src="translated-by-microsoft.png" alt="Microsoft"></a>
         </div>
         <div class="original"><%= textHTML %></div>
-        <div class="openT">
-          <%= linkHTML %>
-        </div>
+        <%= linksHTML %>
       </div></div>
     </label>
   `,
-  translateLink: `<a href="<%- url %>" target="_blank" rel="noopener" onclick="openTranslate(event)"><%- label %></a>`,
+  translateLink: `<a href="<%- url %>" target="_blank" rel="noopener" data-size="<%- windowSize %>" onclick="openTranslate(this, event)"><%- label %></a>`,
+  translateLine: `<div class="openT"><%= lineHTML %></div>`,
   count: `<div>Translation aborted: Maximum <%- countType %> count of <%- maxCount %> exceeded.</div>`
 });
 
-function generateTranslateLink({srcLang, destLang, text}) {
-  srcLang = (srcSubstitutions.get(srcLang) || srcLang);
-  const p = [srcLang, destLang, text].map(encodeURIComponent);
-  return `https://www.bing.com/translator?from=${p[0]}&to=${p[1]}&text=${p[2]}`;
-}
-
 function generateTranslateLinks({srcLang, destLang, text}) {
-  let linkHTML = '';
-  linkHTML += templates.translateLink({
-    url: generateTranslateLink({srcLang, destLang, text}),
-    label: 'open in Microsoft Translator'
-  });
-  if (/\n/.test(text)) {
-    let joiner = (noSpaces.includes(srcLang) ? '' : ' ');
-    let textJoined = text.replace(/\n/g, joiner);
-    linkHTML += ' ' + templates.translateLink({
-      url: generateTranslateLink({srcLang, destLang, text: textJoined}),
-      label: '[join lines]'
+  let linksHTML = '';
+  translators.forEach((translator) => {
+    const {windowSize} = translator;
+    let lineHTML = '';
+    lineHTML += templates.translateLink({
+      url: translator.link({srcLang, destLang, text}),
+      label: `open in ${translator.name}`,
+      windowSize
     });
-  }
-  return linkHTML;
+    if (/\n/.test(text)) {
+      let joiner = (noSpaces.includes(srcLang) ? '' : ' ');
+      let textJoined = text.replace(/\n/g, joiner);
+      lineHTML += ' ' + templates.translateLink({
+        url: translator.link({srcLang, destLang, text: textJoined}),
+        label: '[join lines]',
+        windowSize
+      });
+    }
+    linksHTML += templates.translateLine({lineHTML});
+  });
+  return linksHTML;
 }
 
 function generateAnnotation({translation, text, vertices, srcLang, destLang}, languages) {
@@ -104,9 +104,9 @@ function generateAnnotation({translation, text, vertices, srcLang, destLang}, la
   const translationHTML = html.escapeBR(translation);
   const textHTML = html.escapeBR(text);
   const srcLangName = (languages.get(srcLang) || {}).name;
-  const linkHTML = generateTranslateLinks({srcLang, destLang, text});
+  const linksHTML = generateTranslateLinks({srcLang, destLang, text});
   const hideTranslation = translation.length ? '' : 'hide-translation';
-  return {z1, x1, y1, dx, dy, points, translationHTML, textHTML, srcLangName, linkHTML, hideTranslation};
+  return {z1, x1, y1, dx, dy, points, translationHTML, textHTML, srcLangName, linksHTML, hideTranslation};
 }
 
 function generateHTML(options) {

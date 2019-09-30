@@ -2,6 +2,7 @@ const fs = require('fs');
 const vision = require('@google-cloud/vision');
 const cache = require('./cache');
 const throttle = require('./throttle');
+const {translators} = require('./translators');
 
 const supportedLanguages = new Set(
   fs.readFileSync('./ocr-supported.txt', {encoding: 'utf8'}).trim().split('\n')
@@ -16,7 +17,13 @@ class NoResultsError extends Error {}
 async function ocr({keys, imageData, srcLang, ip}) {
   let lang2;
   if (!supportedLanguages.has(srcLang)) {
-    if (supportedLanguages.has(lang2 = srcLang.split('-')[0])) {
+    if (supportedLanguages.has(
+      lang2 = srcLang.split('-')[0]
+    )) {
+      srcLang = lang2;
+    } else if (supportedLanguages.has(
+      lang2 = translators.get('google').convert(srcLang)
+    )) {
       srcLang = lang2;
     } else {
       srcLang = 'auto';
