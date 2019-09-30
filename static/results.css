@@ -111,6 +111,6 @@ main {
   margin: 9px;
 }
 .tooltip.hide-translation > .attribution,
-.tooltip.hide-translation > translation {
+.tooltip.hide-translation > .translation {
   display: none;
 }
