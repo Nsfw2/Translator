@@ -156,7 +156,7 @@ async function results({imageData, srcLang, destLang, languages, ip}) {
 }
 
 function blankHTML() {
-  const resultsHTML = templates.html({imageHTML: '', navbar: html.navbar});
+  const resultsHTML = templates.html({imageHTML: '', navbar: html.navbar, warningsHTML: ''});
   return resultsHTML;
 }
 
