@@ -55,13 +55,13 @@ const templates = html.makeTemplates({
         <div class="attribution">
           <a href="https://translate.google.com/" target="_blank" rel="noopener"><img src="translated-by-google.png"></a><span> (<%- srcLang %> \u2192 <%- destLang %>)</span>
         </div>
-        <div class="openGT">
+        <div class="openT">
           <%= linkHTML %>
         </div>
       </div></div>
     </label>
   `,
-  translateLink: `<a href="<%- url %>" target="_blank" rel="noopener" onclick="openGoogleTranslate(event)"><%- label %></a>`,
+  translateLink: `<a href="<%- url %>" target="_blank" rel="noopener" onclick="openTranslate(event)"><%- label %></a>`,
   charCount: `<div>Translation aborted: Maximum character count of <%- maxCharCount %> exceeded.</div>`
 });
 
