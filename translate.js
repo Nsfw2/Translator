@@ -52,7 +52,7 @@ async function getLanguages() {
     null,
     () => client.getSupportedLanguages({parent, displayLanguageCode: 'en'})
   );
-  return languages[0].languages.map(x => ({code: x.languageCode, name: x.displayName}));
+  return new Map(languages[0].languages.map(x => [x.languageCode, {name: x.displayName}]));
 }
 
 module.exports = {translate, getLanguages};

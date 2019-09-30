@@ -71,15 +71,13 @@ const templates = html.makeTemplates({
 
 function generateLangHTML(languages, selectedLang) {
   let langHTML = '';
-  const langMap = new Map(languages.map(lang => [lang.code, lang.name]));
   topLanguages.forEach(code => {
-    const name = langMap.get(code);
+    const {name} = languages.get(code);
     const selected = (code === selectedLang) ? 'selected' : '';
     if (name) langHTML += templates.language({code, name, selected});
   });
-  languages.forEach(lang => {
-    if (!topLanguages.includes(lang.code)) {
-      const {code, name} = lang;
+  languages.forEach(({name}, code) => {
+    if (!topLanguages.includes(code)) {
       const selected = (code === selectedLang) ? 'selected' : '';
       langHTML += templates.language({code, name, selected});
     }

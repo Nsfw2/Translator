@@ -102,11 +102,10 @@ app.post('/results', upload.single('image'), (req, res, next) => (async () => {
   }
   const {srcLang, destLang} = req.body;
   const languages = await translate.getLanguages();
-  const languageCodes = new Set(languages.map(lang => lang.code));
-  if (srcLang !== 'auto' && !languageCodes.has(srcLang)) {
+  if (srcLang !== 'auto' && !languages.has(srcLang)) {
     return res.status(400).send(`Unsupported source language: ${_.escape(srcLang)}`);
   }
-  if (!languageCodes.has(destLang)) {
+  if (!languages.has(destLang)) {
     return res.status(400).send(`Unsupported destination language: ${_.escape(destLang)}`);
   }
   const {html} = await results.results({imageData, srcLang, destLang, ip: req.ip});
