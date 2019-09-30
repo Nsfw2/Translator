@@ -65,7 +65,7 @@ const templates = html.makeTemplates({
   charCount: `<div>Translation aborted: Maximum character count of <%- maxCharCount %> exceeded.</div>`
 });
 
-function googleTranslateLink({srcLang, destLang, text}) {
+function generateTranslateLink({srcLang, destLang, text}) {
   srcLang = (srcSubstitutions.get(srcLang) || srcLang);
   let linkParams = [srcLang, destLang, text].map(encodeURIComponent).join('|');
   return `https://translate.google.com/#${linkParams}`;
@@ -74,14 +74,14 @@ function googleTranslateLink({srcLang, destLang, text}) {
 function generateTranslateLinks({srcLang, destLang, text}) {
   let linkHTML = '';
   linkHTML += templates.translateLink({
-    url: googleTranslateLink({srcLang, destLang, text}),
+    url: generateTranslateLink({srcLang, destLang, text}),
     label: 'open in Google Translate'
   });
   if (/\n/.test(text)) {
     let joiner = (noSpaces.includes(srcLang) ? '' : ' ');
     let textJoined = text.replace(/\n/g, joiner);
     linkHTML += ' ' + templates.translateLink({
-      url: googleTranslateLink({srcLang, destLang, text: textJoined}),
+      url: generateTranslateLink({srcLang, destLang, text: textJoined}),
       label: '[join lines]'
     });
   }
