@@ -1,44 +1,56 @@
 const fs = require('fs');
-const {TranslationServiceClient} = require('@google-cloud/translate').v3beta1;
+const fetch = require('node-fetch');
 const cache = require('./cache');
 const throttle = require('./throttle');
 
-const keyFilename = '../keys/google_application_credentials.json';
+const keyFilename = '../keys/microsoft_translator_key.json';
+const translateAPI = 'https://api.cognitive.microsofttranslator.com/translate?api-version=3.0';
+const languagesAPI = 'https://api.cognitive.microsofttranslator.com/languages?api-version=3.0';
 
-const client = new TranslationServiceClient({keyFilename});
-const projectId = JSON.parse(fs.readFileSync(keyFilename, {encoding: 'utf-8'})).project_id;
-const parent = client.locationPath(projectId, 'global');
+const key = JSON.parse(fs.readFileSync(keyFilename, {encoding: 'utf-8'})).key;
+
+async function requestError(context, res) {
+  const text = await res.text();
+  return new Error(`${context}: ${res.status} ${res.statusText}\n${text}`);
+}
 
 function computeCost(text) {
-  return 0.02 * text.join('').length;
+  return 0.01 * text.join('').length;
 }
 
 async function translate({keys, annotations, srcLang, destLang, ip}) {
-  const text = annotations.map(x => x.text);
+  let text = annotations.map(x => x.text);
   if (!text.length) {
     return annotations;
   }
   const cost = computeCost(text);
-  const request = {
-    parent,
-    contents: text,
-    mimeType: 'text/plain',
-    sourceLanguageCode: ((srcLang === 'auto') ? undefined : srcLang),
-    targetLanguageCode: destLang
+  text = text.map(x => ({Text: x}));
+  let url = translateAPI;
+  if (srcLang !== 'auto') {
+    url += `&from=${srcLang}`;
+  }
+  url += `&to=${destLang}`;
+  const headers = {
+    'Ocp-Apim-Subscription-Key': key,
+    'Content-Type': 'application/json'
   };
   const translations = await cache.writeJSON(
     keys,
     `t.${srcLang}.${destLang}.json`,
-    text,
+    {text, provider: 'microsoft'},
     async () => {
       throttle.addCost('cloud', ip, cost);
-      return client.translateText(request);
+      const res = await fetch(url, {method: 'POST', headers, body: JSON.stringify(text)});
+      if (!res.ok) {
+        throw requestError('failed to fetch translation results', res);
+      }
+      return res.json();
     }
   );
-  translations[0].translations.forEach((result, i) => {
+  translations.forEach((result, i) => {
     if (annotations[i]) {
-      annotations[i].translation = result.translatedText;
-      annotations[i].srcLang = (srcLang === 'auto') ? result.detectedLanguageCode : srcLang;
+      annotations[i].translation = result.translations[0].text;
+      annotations[i].srcLang = (srcLang === 'auto') ? result.detectedLanguage.language : srcLang;
       annotations[i].destLang = destLang;
     }
   });
@@ -49,10 +61,16 @@ async function getLanguages() {
   const languages = await cache.writeJSON(
     null,
     `lang.json`,
-    null,
-    () => client.getSupportedLanguages({parent, displayLanguageCode: 'en'})
+    {provider: 'microsoft'},
+    async () => {
+      const res = await fetch(languagesAPI);
+      if (!res.ok) {
+        throw requestError('failed to fetch available languages', res);
+      }
+      return res.json();
+    }
   );
-  return new Map(languages[0].languages.map(x => [x.languageCode, {name: x.displayName}]));
+  return new Map(Object.entries(languages.translation).sort((a, b) => (a[1].name > b[1].name) ? 1 : (a[1].name < b[1].name) ? -1 : 0));
 }
 
 module.exports = {translate, getLanguages};

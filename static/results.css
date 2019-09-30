@@ -99,8 +99,16 @@ main {
 .openT {
   font-size: 75%;
 }
+.attribution > span,
 .attribution > a > img {
   vertical-align: middle;
+}
+.attribution > a {
+  margin: 0px 4px 0px 8px;
+  display: inline-block;
+}
+.attribution > a > img {
+  margin: 9px;
 }
 .tooltip.hide-translation > .attribution,
 .tooltip.hide-translation > translation {

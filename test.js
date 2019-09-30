@@ -1,4 +1,5 @@
 const fsPromises = require('fs').promises;
+const translate = require('./translate');
 const index = require('./index');
 const results = require('./results');
 
@@ -23,7 +24,8 @@ async function writeIndex() {
 
 async function handleFile(filename) {
   const imageData = await fsPromises.readFile(filename);
-  const {html, keys} = await results.results({imageData, srcLang, destLang, ip: 'bypass'});
+  const languages = await translate.getLanguages();
+  const {html, keys} = await results.results({imageData, srcLang, destLang, languages, ip: 'bypass'});
   return parallel([
     fsPromises.writeFile(`${outputPath}/${keys.storage}.${srcLang}.${destLang}.html`, html),
     fsPromises.writeFile(`${outputPath}/${keys.storage}.key`, keys.encryption)

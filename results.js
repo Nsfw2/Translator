@@ -5,9 +5,12 @@ const translate = require('./translate');
 const html = require('./html');
 const log = require('./log').logger('results');
 
-const maxCharCount = 1000;
-const noSpaces = ['ja', 'zh-CN', 'zh-TW'];
-const srcSubstitutions = new Map([['zh-TW', 'zh-CN']]);
+const maxCounts = {
+  character: 1000, // to limit cost
+  paragraph: 100   // maximum allowed in one request by Microsoft
+};
+const noSpaces = ['ja', 'yue', 'zh-Hans', 'zh-Hant'];
+const srcSubstitutions = new Map([['auto', '']]);
 
 const templates = html.makeTemplates({
   html: `
@@ -51,10 +54,10 @@ const templates = html.makeTemplates({
       </svg>
       <div class="tooltip-root"><div class="tooltip <%- hideTranslation %>">
         <div class="translation"><%= translationHTML %></div>
-        <div class="original"><%= textHTML %></div>
         <div class="attribution">
-          <a href="https://translate.google.com/" target="_blank" rel="noopener"><img src="translated-by-google.png"></a><span> (<%- srcLang %> \u2192 <%- destLang %>)</span>
+          <span>Translated from <%- srcLangName %> by</span><a href="http://aka.ms/MicrosoftTranslatorAttribution" target="_blank" rel="noopener"><img src="translated-by-microsoft.png" alt="Microsoft"></a>
         </div>
+        <div class="original"><%= textHTML %></div>
         <div class="openT">
           <%= linkHTML %>
         </div>
@@ -62,20 +65,20 @@ const templates = html.makeTemplates({
     </label>
   `,
   translateLink: `<a href="<%- url %>" target="_blank" rel="noopener" onclick="openTranslate(event)"><%- label %></a>`,
-  charCount: `<div>Translation aborted: Maximum character count of <%- maxCharCount %> exceeded.</div>`
+  count: `<div>Translation aborted: Maximum <%- countType %> count of <%- maxCount %> exceeded.</div>`
 });
 
 function generateTranslateLink({srcLang, destLang, text}) {
   srcLang = (srcSubstitutions.get(srcLang) || srcLang);
-  let linkParams = [srcLang, destLang, text].map(encodeURIComponent).join('|');
-  return `https://translate.google.com/#${linkParams}`;
+  const p = [srcLang, destLang, text].map(encodeURIComponent);
+  return `https://www.bing.com/translator?from=${p[0]}&to=${p[1]}&text=${p[2]}`;
 }
 
 function generateTranslateLinks({srcLang, destLang, text}) {
   let linkHTML = '';
   linkHTML += templates.translateLink({
     url: generateTranslateLink({srcLang, destLang, text}),
-    label: 'open in Google Translate'
+    label: 'open in Microsoft Translator'
   });
   if (/\n/.test(text)) {
     let joiner = (noSpaces.includes(srcLang) ? '' : ' ');
@@ -88,7 +91,7 @@ function generateTranslateLinks({srcLang, destLang, text}) {
   return linkHTML;
 }
 
-function generateAnnotation({translation, text, vertices, srcLang, destLang}) {
+function generateAnnotation({translation, text, vertices, srcLang, destLang}, languages) {
   const xs = vertices.map(p => p.x);
   const ys = vertices.map(p => p.y);
   const zs = vertices.map(p => p.x + p.y);
@@ -100,14 +103,15 @@ function generateAnnotation({translation, text, vertices, srcLang, destLang}) {
   const points = vertices.map(p => `${p.x - x1},${p.y - y1}`).join(' ');
   const translationHTML = html.escapeBR(translation);
   const textHTML = html.escapeBR(text);
+  const srcLangName = (languages.get(srcLang) || {}).name;
   const linkHTML = generateTranslateLinks({srcLang, destLang, text});
   const hideTranslation = translation.length ? '' : 'hide-translation';
-  return {z1, x1, y1, dx, dy, points, translationHTML, textHTML, srcLang, destLang, linkHTML, hideTranslation};
+  return {z1, x1, y1, dx, dy, points, translationHTML, textHTML, srcLangName, linkHTML, hideTranslation};
 }
 
 function generateHTML(options) {
-  const {annotations, imageData, warningsHTML} = options;
-  const annotationsData = annotations.map(generateAnnotation);
+  const {annotations, imageData, warningsHTML, languages} = options;
+  const annotationsData = annotations.map(o => generateAnnotation(o, languages));
   const zs = annotationsData.map(o => o.z1).sort((a, b) => a - b);
   annotationsData.forEach(o => {
     o.z1 = zs.indexOf(o.z1) - zs.length;
@@ -121,23 +125,33 @@ function generateHTML(options) {
   return resultsHTML;
 }
 
-async function results({imageData, srcLang, destLang, ip}) {
+async function results({imageData, srcLang, destLang, languages, ip}) {
   let warningsHTML = '';
   const keys = await cache.getKeys(imageData);
   const annotations = await ocr.ocr({keys, imageData, srcLang, ip});
-  const charCount = annotations.map(x => x.text).join('').length;
-  if (charCount <= maxCharCount) {
+  const counts = {
+    character: annotations.map(x => x.text).join('').length,
+    paragraph: annotations.length
+  };
+  let countExceeded = false;
+  for (let countType of ['character', 'paragraph']) {
+    let maxCount = maxCounts[countType];
+    if (counts[countType] > maxCount) {
+      countExceeded = true;
+      warningsHTML += templates.count({countType, maxCount});
+      break;
+    }
+  }
+  if (!countExceeded) {
     await translate.translate({keys, annotations, srcLang, destLang, ip});
-  } else {
-    warningsHTML += templates.charCount({maxCharCount});
   }
   annotations.forEach(x => {
     if (!x.translation) x.translation = '';
     if (!x.srcLang) x.srcLang = srcLang;
     if (!x.destLang) x.destLang = destLang;
   });
-  const resultsHTML = generateHTML({annotations, imageData, warningsHTML});
-  log({hash: keys.storage, charCount, srcLang, destLang});
+  const resultsHTML = generateHTML({annotations, imageData, warningsHTML, languages});
+  log({hash: keys.storage, charCount: counts.character, srcLang, destLang});
   return {html: resultsHTML, keys};
 }
 

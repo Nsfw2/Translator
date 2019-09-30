@@ -108,7 +108,7 @@ app.post('/results', upload.single('image'), (req, res, next) => (async () => {
   if (!languages.has(destLang)) {
     return res.status(400).send(`Unsupported destination language: ${_.escape(destLang)}`);
   }
-  const {html} = await results.results({imageData, srcLang, destLang, ip: req.ip});
+  const {html} = await results.results({imageData, srcLang, destLang, languages, ip: req.ip});
   res.send(html);
 })().catch(next));
 
