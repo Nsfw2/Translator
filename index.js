@@ -20,7 +20,7 @@ const templates = html.makeTemplates({
       <form action="results" method="POST" enctype="multipart/form-data">
         <section class="about">
           <h1>Translate an image</h1>
-          <div class="small">Powered by Google&#39;s <a href="https://cloud.google.com/vision/">Vision API</a> and Microsoft&#39;s <a href="https://www.microsoft.com/en-us/translator/business/translator-api/">Translator API</a></div>
+          <div class="small">Powered by Google&#39;s <a href="https://cloud.google.com/vision/" target="_blank" rel="noopener">Vision API</a> and Microsoft&#39;s <a href="https://www.microsoft.com/en-us/translator/business/translator-api/" target="_blank" rel="noopener">Translator API</a></div>
         </section>
         <section class="imageselect">
           <label>
