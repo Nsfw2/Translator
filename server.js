@@ -1,3 +1,4 @@
+const {URL} = require('url');
 const express = require('express');
 const multer = require('multer');
 const fetch = require('node-fetch');
@@ -70,8 +71,14 @@ app.post('/results', upload.single('image'), (req, res, next) => (async () => {
   } else if (req.body.imageURL) {
     const {imageURL} = req.body;
     if (/^https?:/i.test(imageURL)) {
+      let imageURL2;
       try {
-        const resURL = await fetch(imageURL, {size: maxFileSize});
+        imageURL2 = new URL(imageURL);
+      } catch(err) {
+        return res.status(400).send(`Invalid URL: ${_.escape(imageURL)}`);
+      }
+      try {
+        const resURL = await fetch(imageURL2, {size: maxFileSize});
         if (resURL.ok) {
           imageData = await resURL.buffer();
         } else {
