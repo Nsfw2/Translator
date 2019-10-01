@@ -57,6 +57,9 @@ const templates = html.makeTemplates({
             </select>
           </label>
         </section>
+        <section>
+          Need human translations? <a href="https://track.fiverr.com/visit/?bta=57727&amp;brand=fiverrcpa&amp;landingPage=https%3A%2F%2Fwww.fiverr.com%2Fcategories%2Fwriting-translation%2Fquality-translation-services" target="_blank" rel="nofollow noopener">Hire a translator on Fiverr.</a>
+        </section>
         <section class="verifysubmit" <%= submitHidden %>>
           <%= captchaHTML %>
           <input value="Submit" type="submit">
