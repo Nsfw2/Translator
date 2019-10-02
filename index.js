@@ -11,6 +11,7 @@ const templates = html.makeTemplates({
   html: `
     <!doctype html><head>
       <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width">
       <title>Translate an image</title>
       <link href="common.css" rel="stylesheet">
       <link href="index.css" rel="stylesheet">
