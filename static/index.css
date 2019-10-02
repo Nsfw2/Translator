@@ -54,14 +54,12 @@ select {
   max-height: 64px;
   max-width: 64px;
 }
-.languages {
+.languages, .verifysubmit {
   display: flex;
+  flex-wrap: wrap;
 }
 form > input, form > output {
   margin: 12px 5px;
-}
-.verifysubmit {
-  display: flex;
 }
 .h-captcha {
   margin: 5px 5px -1px;
