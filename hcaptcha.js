@@ -7,7 +7,7 @@ const {sitekey, secret} = JSON.parse(fs.readFileSync('../keys/hcaptcha.json', {e
 
 const templates = html.makeTemplates({
   hcaptcha: `
-    <div class="h-captcha" data-sitekey="<%- sitekey %>"></div>
+    <div class="h-captcha" data-sitekey="<%- sitekey %>" data-callback="onCaptchaSolved"></div>
     <script src="https://hcaptcha.com/1/api.js" async defer></script>
   `
 });
