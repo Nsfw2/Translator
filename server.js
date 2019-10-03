@@ -15,7 +15,6 @@ const hcaptcha = require('./hcaptcha');
 const staticPath = './static';
 const htmlPath = './html';
 const maxFileSize = (10 << 20);
-const serverHostname = 'https://imagetranslate.site/';
 
 const limits = {
   fields: index.fieldCount - 1,
@@ -123,7 +122,7 @@ app.get(['/tools', '/privacy'], (req, res, next) => (async () => {
   const template = await fsPromises.readFile(`${htmlPath}${req.path}`, {encoding: 'utf-8'});
   const templateHTML = _.template(html.trim(template))({
     navbar: html.navbar,
-    host: serverHostname
+    host: `${req.protocol}://${req.hostname}/`
   });
   res.send(templateHTML);
 })().catch(next));
