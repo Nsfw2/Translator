@@ -16,6 +16,7 @@ const templates = html.makeTemplates({
   html: `
     <!doctype html><head>
       <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width">
       <title>Translation results</title>
       <link href="common.css" rel="stylesheet">
       <link href="results.css" rel="stylesheet">

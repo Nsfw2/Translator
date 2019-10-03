@@ -8,6 +8,7 @@ const templates = html.makeTemplates({
   form: `
     <!doctype html><head>
       <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width">
       <title>Feedback</title>
       <link href="common.css" rel="stylesheet">
       <link href="static.css" rel="stylesheet">
