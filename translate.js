@@ -18,8 +18,14 @@ function computeCost(text) {
   return 0.01 * text.join('').length;
 }
 
+const joinLinesRegexp = new RegExp('(?<!\\p{P})\\n(?!\\p{P})', 'ug'); // https://github.com/jshint/jshint/issues/2361
+
+function joinLines(text) {
+  return text.replace(joinLinesRegexp, ' ');
+}
+
 async function translate({keys, annotations, srcLang, destLang, ip}) {
-  let text = annotations.map(x => x.text);
+  let text = annotations.map(x => joinLines(x.text));
   if (!text.length) {
     return annotations;
   }
@@ -73,4 +79,4 @@ async function getLanguages() {
   return new Map(Object.entries(languages.translation).sort((a, b) => (a[1].name > b[1].name) ? 1 : (a[1].name < b[1].name) ? -1 : 0));
 }
 
-module.exports = {translate, getLanguages};
+module.exports = {translate, getLanguages, joinLines};

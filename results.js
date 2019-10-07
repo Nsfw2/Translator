@@ -10,7 +10,6 @@ const maxCounts = {
   character: 1000, // to limit cost
   paragraph: 100   // maximum allowed in one request by Microsoft
 };
-const noSpaces = ['ja', 'yue', 'zh-Hans', 'zh-Hant'];
 
 const templates = html.makeTemplates({
   html: `
@@ -69,21 +68,20 @@ const templates = html.makeTemplates({
 });
 
 function generateTranslateLinks({srcLang, destLang, text}) {
+  const textJoined = translate.joinLines(text);
   let linksHTML = '';
   translators.forEach((translator) => {
     const {windowSize} = translator;
     let lineHTML = '';
     lineHTML += templates.translateLink({
-      url: translator.link({srcLang, destLang, text}),
+      url: translator.link({srcLang, destLang, text: textJoined}),
       label: `open in ${translator.name}`,
       windowSize
     });
-    if (/\n/.test(text)) {
-      let joiner = (noSpaces.includes(srcLang) ? '' : ' ');
-      let textJoined = text.replace(/\n/g, joiner);
+    if (text !== textJoined) {
       lineHTML += ' ' + templates.translateLink({
-        url: translator.link({srcLang, destLang, text: textJoined}),
-        label: '[join lines]',
+        url: translator.link({srcLang, destLang, text}),
+        label: "[don't join lines]",
         windowSize
       });
     }
