@@ -95,6 +95,10 @@ main {
   display: block;
   padding: 4px;
 }
+.translation,
+.original {
+  white-space: pre-wrap;
+}
 .attribution,
 .openT {
   font-size: 75%;
