@@ -48,7 +48,7 @@ async function translate({keys, annotations, srcLang, destLang, ip}) {
       throttle.addCost('cloud', ip, cost);
       const res = await fetch(url, {method: 'POST', headers, body: JSON.stringify(text)});
       if (!res.ok) {
-        throw requestError('failed to fetch translation results', res);
+        throw await requestError('failed to fetch translation results', res);
       }
       return res.json();
     }
@@ -71,7 +71,7 @@ async function getLanguages() {
     async () => {
       const res = await fetch(languagesAPI);
       if (!res.ok) {
-        throw requestError('failed to fetch available languages', res);
+        throw await requestError('failed to fetch available languages', res);
       }
       return res.json();
     }
