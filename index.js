@@ -1,7 +1,6 @@
 const html = require('./html');
 const translate = require('./translate');
 const throttle = require('./throttle');
-const hcaptcha = require('./hcaptcha');
 
 const topLanguages = ['en', 'ja'];
 const fillableFields = ['imageURL', 'imageB64', 'imageB64Name', 'srcLang', 'destLang'];
@@ -62,7 +61,6 @@ const templates = html.makeTemplates({
           Need human translations? <a href="https://track.fiverr.com/visit/?bta=57727&amp;brand=fiverrcpa&amp;landingPage=https%3A%2F%2Fwww.fiverr.com%2Fcategories%2Fwriting-translation%2Fquality-translation-services" target="_blank" rel="nofollow noopener">Hire a translator on Fiverr.</a>
         </section>
         <section class="verifysubmit" <%= submitHidden %>>
-          <%= captchaHTML %>
           <input value="Submit" type="submit">
         </section>
         <output <%= outputHidden %>><%= message %></output>
@@ -93,12 +91,11 @@ async function index({imageURL, imageB64, imageB64Name, srcLang, destLang, ip}) 
   const languages = await translate.getLanguages();
   const srcLangHTML = generateLangHTML(languages, srcLang);
   const destLangHTML = generateLangHTML(languages, destLang);
-  const captchaHTML = hcaptcha.widget();
   const issue = throttle.overCost('cloud', ip);
   const submitHidden = issue ? 'hidden' : '';
   const outputHidden = issue ? '' : 'hidden';
   const message = issue ? templates.message({issue}) : '';
-  const indexHTML = templates.html({imageURL, imageB64, imageB64Name, srcLangHTML, destLangHTML, navbar: html.navbar, captchaHTML, submitHidden, outputHidden, message});
+  const indexHTML = templates.html({imageURL, imageB64, imageB64Name, srcLangHTML, destLangHTML, navbar: html.navbar, submitHidden, outputHidden, message});
   return {html: indexHTML};
 }
 

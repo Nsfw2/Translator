@@ -61,9 +61,6 @@ select {
 form > input, form > output {
   margin: 12px 5px;
 }
-.h-captcha {
-  margin: 5px 5px -1px;
-}
 input[type="submit"] {
   padding: 5px;
   flex: auto;

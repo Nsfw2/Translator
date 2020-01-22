@@ -80,13 +80,6 @@ document.onpaste = function(e) {
   setFile(file, name);
 };
 
-function onCaptchaSolved() {
-  var ae = document.activeElement;
-  if (!ae || ae === document.body) {
-    $(sel.submit).focus();
-  }
-}
-
 function parseHash() {
   var inputs = document.querySelectorAll('input[type=text], input[type=hidden], select');
   var i;

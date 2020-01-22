@@ -10,7 +10,6 @@ const translate = require('./translate');
 const feedback = require('./feedback');
 const html = require('./html');
 const throttle = require('./throttle');
-const hcaptcha = require('./hcaptcha');
 
 const staticPath = './static';
 const htmlPath = './html';
@@ -54,14 +53,6 @@ app.get('/results', (req, res) => {
 app.post('/results', upload.single('image'), (req, res, next) => (async () => {
   const issue = throttle.overCost('cloud', req.ip);
   if (issue) return res.status(429).send(index.throttleMessage(issue));
-  const hcaptchaToken = req.body['h-captcha-response'];
-  if (!hcaptchaToken) {
-    return res.status(403).send('Error: hCaptcha not completed.');
-  }
-  const hcaptchaSuccess = await hcaptcha.verify(hcaptchaToken);
-  if (!hcaptchaSuccess) {
-    return res.status(403).send('Error: Failed to verify hCaptcha.');
-  }
   let imageData;
   if (req.file) {
     imageData = req.file.buffer;
