@@ -18,6 +18,9 @@ form {
 section {
   margin: 7px 5px;
 }
+section:empty {
+  display: none;
+}
 h1 {
   font-size: 20pt;
   margin: 5px 0;
