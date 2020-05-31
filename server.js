@@ -2,6 +2,7 @@ const {URL} = require('url');
 const express = require('express');
 const multer = require('multer');
 const fetch = require('node-fetch');
+const {SocksProxyAgent} = require('socks-proxy-agent');
 const _ = require('lodash');
 const fsPromises = require('fs').promises;
 const index = require('./index');
@@ -28,6 +29,8 @@ const app = express();
 const port = +(process.argv[2] || 3000);
 
 app.set('trust proxy', 'loopback');
+
+const torAgent = new SocksProxyAgent('socks://127.0.0.1:9050');
 
 function parseQuery(keys, query) {
   const output = {};
@@ -68,7 +71,11 @@ app.post('/results', upload.single('image'), (req, res, next) => (async () => {
         return res.status(400).send(`Invalid URL: ${_.escape(imageURL)}`);
       }
       try {
-        const resURL = await fetch(imageURL2, {size: maxFileSize});
+        const fetchOptions = {size: maxFileSize};
+        if (/^https?:\/\/[^\/]+\.onion\//i.test(imageURL)) {
+          fetchOptions.agent = torAgent;
+        }
+        const resURL = await fetch(imageURL2, fetchOptions);
         if (resURL.ok) {
           imageData = await resURL.buffer();
         } else {
