@@ -1,5 +1,5 @@
 #!/bin/bash
-grep '}$' log/results \
+grep '^{[^{}]*}$' log/results \
   | tac \
   | jq -r '.hash' \
   | grep -xP '[0-9a-f]{64}' \
