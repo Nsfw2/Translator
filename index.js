@@ -21,6 +21,7 @@ const templates = html.makeTemplates({
         <section class="about">
           <h1>Translate an image</h1>
           <div class="small">Powered by Google&#39;s <a href="https://cloud.google.com/vision/" target="_blank" rel="noopener">Vision API</a> and Microsoft&#39;s <a href="https://www.microsoft.com/en-us/translator/business/translator-api/" target="_blank" rel="noopener">Translator API</a></div>
+          <div class="small">Donate: bc1q8y039jxh52ra07q5hhkycmxspstttu2k757hlq (BTC)</div>
         </section>
         <section class="imageselect">
           <label>
