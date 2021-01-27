@@ -1,8 +1,9 @@
-const timeWindow = 3600*1000;
+const HOUR = 3600*1000;
+const maxTimeWindow = 48*HOUR;
 
 const thresholds = {
-  feedback: [{octets: 0, cost:  40}, {octets: 3, cost:  4}],
-  cloud:    [{octets: 0, cost: 900}, {octets: 3, cost: 90}]
+  feedback: [{octets: 0, cost:  40, timeWindow: HOUR}, {octets: 3, cost:  4, timeWindow: HOUR}],
+  cloud:    [{octets: 0, cost: 900, timeWindow: 10*HOUR}, {octets: 3, cost: 90, timeWindow: 48*HOUR}]
 };
 
 const log = {};
@@ -12,12 +13,12 @@ function addCost(bucket, ip, cost) {
   const time = Date.now();
   if (!(bucket in log)) log[bucket] = [];
   log[bucket].push({ip, cost, time});
-  while (log[bucket][0] && log[bucket][0].time <= time - timeWindow) {
+  while (log[bucket][0] && log[bucket][0].time <= time - maxTimeWindow) {
     log[bucket].shift();
   }
 }
 
-function getCost(bucket, ip, octets) {
+function getCost(bucket, ip, octets, timeWindow) {
   if (ip === 'bypass') return 0;
   if (!(bucket in log)) return 0;
   const time = Date.now();
@@ -33,8 +34,8 @@ function getCost(bucket, ip, octets) {
 
 function overCost(bucket, ip) {
   for (let i = 0; i < thresholds[bucket].length; i++) {
-    let {octets, cost} = thresholds[bucket][i];
-    let currentCost = getCost(bucket, ip, octets);
+    let {octets, cost, timeWindow} = thresholds[bucket][i];
+    let currentCost = getCost(bucket, ip, octets, timeWindow);
     if (currentCost >= cost) return (octets ? 'heavy usage in your area' : 'heavy usage');
   }
   return false;

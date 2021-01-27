@@ -66,7 +66,7 @@ const templates = html.makeTemplates({
     </body></html>
   `,
   language: `<option value="<%- code %>" <%= selected %>><%- name %></option>`,
-  message: `Image translation is temporarily unavailable due to <%- issue %>. Try again in about an hour.`
+  message: `Image translation is temporarily unavailable due to <%- issue %>. Try again later.`
 });
 
 function generateLangHTML(languages, selectedLang) {
