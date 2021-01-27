@@ -1,9 +1,9 @@
 const HOUR = 3600*1000;
-const maxTimeWindow = 48*HOUR;
+const maxTimeWindow = 24*HOUR;
 
 const thresholds = {
   feedback: [{octets: 0, cost:  40, timeWindow: HOUR}, {octets: 3, cost:  4, timeWindow: HOUR}],
-  cloud:    [{octets: 0, cost: 900, timeWindow: 10*HOUR}, {octets: 3, cost: 90, timeWindow: 48*HOUR}]
+  cloud:    [{octets: 0, cost: 900, timeWindow: 5*HOUR}, {octets: 3, cost: 90, timeWindow: 24*HOUR}]
 };
 
 const log = {};
