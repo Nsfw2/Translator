@@ -3,8 +3,16 @@ const maxTimeWindow = 24*HOUR;
 
 const thresholds = {
   feedback: [{octets: 0, cost:  40, timeWindow: HOUR}, {octets: 3, cost:  4, timeWindow: HOUR}],
-  cloud:    [{octets: 0, cost: 900, timeWindow: 2*HOUR}, {octets: 3, cost: 90, timeWindow: 24*HOUR}]
+  cloud:    [{octets: 0, cost: 900, timeWindow: 2*HOUR, description: 'usage exceeding available funding'}, {octets: 3, cost: 90, timeWindow: 24*HOUR}]
 };
+
+for (let bucket in thresholds) {
+  for (let threshold of thresholds[bucket]) {
+    if (!threshold.description) {
+      threshold.description = (threshold.octets ? 'heavy usage in your area' : 'heavy usage');
+    }
+  }
+}
 
 const log = {};
 
@@ -34,9 +42,9 @@ function getCost(bucket, ip, octets, timeWindow) {
 
 function overCost(bucket, ip) {
   for (let i = 0; i < thresholds[bucket].length; i++) {
-    let {octets, cost, timeWindow} = thresholds[bucket][i];
+    let {octets, cost, timeWindow, description} = thresholds[bucket][i];
     let currentCost = getCost(bucket, ip, octets, timeWindow);
-    if (currentCost >= cost) return (octets ? 'heavy usage in your area' : 'heavy usage');
+    if (currentCost >= cost) return description;
   }
   return false;
 }
