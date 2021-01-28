@@ -62,12 +62,11 @@ const templates = html.makeTemplates({
         <section class="verifysubmit" <%= submitHidden %>>
           <input value="Submit" type="submit">
         </section>
-        <output <%= outputHidden %>><%= message %></output>
+        <output <%= outputHidden %>><%- issue %></output>
       </form>
     </body></html>
   `,
   language: `<option value="<%- code %>" <%= selected %>><%- name %></option>`,
-  message: `Image translation is temporarily unavailable due to <%- issue %>. Try again later.`
 });
 
 function generateLangHTML(languages, selectedLang) {
@@ -93,13 +92,8 @@ async function index({imageURL, imageB64, imageB64Name, srcLang, destLang, ip}) 
   const issue = throttle.overCost('cloud', ip);
   const submitHidden = issue ? 'hidden' : '';
   const outputHidden = issue ? '' : 'hidden';
-  const message = issue ? templates.message({issue}) : '';
-  const indexHTML = templates.html({imageURL, imageB64, imageB64Name, srcLangHTML, destLangHTML, navbar: html.navbar, submitHidden, outputHidden, message});
+  const indexHTML = templates.html({imageURL, imageB64, imageB64Name, srcLangHTML, destLangHTML, navbar: html.navbar, submitHidden, outputHidden, issue});
   return {html: indexHTML};
 }
 
-function throttleMessage(issue) {
-  return templates.message({issue});
-}
-
-module.exports = {index, fillableFields, fieldCount, throttleMessage};
+module.exports = {index, fillableFields, fieldCount};

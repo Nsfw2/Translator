@@ -55,7 +55,7 @@ app.get('/results', (req, res) => {
 
 app.post('/results', upload.single('image'), (req, res, next) => (async () => {
   const issue = throttle.overCost('cloud', req.ip);
-  if (issue) return res.status(429).send(index.throttleMessage(issue));
+  if (issue) return res.status(429).send(issue);
   let imageData;
   if (req.file) {
     imageData = req.file.buffer;
@@ -132,7 +132,7 @@ app.get('/feedback', (req, res) => {
 
 app.post('/feedbackposted', express.urlencoded({extended: false}), (req, res, next) => (async () => {
   const issue = throttle.overCost('feedback', req.ip);
-  if (issue) return res.status(429).send(feedback.throttleMessage(issue));
+  if (issue) return res.status(429).send(issue);
   const {message} = req.body;
   if (typeof message !== 'string') return res.status(400).send('Invalid form data.');
   if (message.length > feedback.maxLength) return res.status(413).send('Error: Message too long.');

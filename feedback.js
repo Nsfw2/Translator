@@ -25,8 +25,7 @@ const templates = html.makeTemplates({
     </body></html>
   `,
   submit: `<input type="submit">`,
-  cooldown: `<p class="cooldown"><%= message %></p>`,
-  message: `Feedback is temporarily unavailable due to <%- issue %>. Try again in about an hour.`,
+  cooldown: `<p class="cooldown"><%- issue %></p>`,
   response: `
     <!doctype html><head>
       <meta charset="UTF-8">
@@ -44,7 +43,8 @@ const templates = html.makeTemplates({
 });
 
 function feedback(ip) {
-  const submit = throttle.replaceSubmit('feedback', ip, templates);
+  const issue = throttle.overCost('feedback', ip);
+  const submit = issue ? templates.cooldown({issue}) : templates.submit();
   const form = templates.form({navbar: html.navbar, submit, maxLength});
   return form;
 }
@@ -56,8 +56,4 @@ async function submit(data, ip) {
   return responseHTML;
 }
 
-function throttleMessage(issue) {
-  return templates.message({issue});
-}
-
-module.exports = {maxLength, feedback, submit, throttleMessage};
+module.exports = {maxLength, feedback, submit};
