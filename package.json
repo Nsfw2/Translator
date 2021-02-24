@@ -9,7 +9,7 @@
   "author": "",
   "license": "UNLICENSED",
   "dependencies": {
-    "@google-cloud/vision": "^1.11.0",
+    "@google-cloud/vision": "^2.3.1",
     "express": "^4.17.1",
     "file-type": "^12.4.2",
     "lodash": "^4.17.15",
