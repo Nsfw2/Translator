@@ -24,7 +24,7 @@ function joinLines(text) {
   return text.replace(joinLinesRegexp, ' ');
 }
 
-async function translate({keys, annotations, srcLang, destLang, ip}) {
+async function translate({keys, annotations, srcLang, destLang, user}) {
   let text = annotations.map(x => joinLines(x.text));
   if (!text.length) {
     return annotations;
@@ -45,7 +45,7 @@ async function translate({keys, annotations, srcLang, destLang, ip}) {
     `t.${srcLang}.${destLang}.json`,
     {text, provider: 'microsoft'},
     async () => {
-      throttle.addCost('cloud', ip, cost);
+      throttle.addCost('cloud', user, cost);
       const res = await fetch(url, {method: 'POST', headers, body: JSON.stringify(text)});
       if (!res.ok) {
         throw await requestError('failed to fetch translation results', res);

@@ -18,14 +18,14 @@ async function parallel(tasks) {
 }
 
 async function writeIndex() {
-  const {html} = await index.index({ip: 'bypass'});
+  const {html} = await index.index({user: {ip: 'bypass'}});
   return fsPromises.writeFile(`${outputPath}/index.html`, html);
 }
 
 async function handleFile(filename) {
   const imageData = await fsPromises.readFile(filename);
   const languages = await translate.getLanguages();
-  const {html, keys} = await results.results({imageData, srcLang, destLang, languages, ip: 'bypass'});
+  const {html, keys} = await results.results({imageData, srcLang, destLang, languages, user: {ip: 'bypass'}});
   return parallel([
     fsPromises.writeFile(`${outputPath}/${keys.storage}.${srcLang}.${destLang}.html`, html),
     fsPromises.writeFile(`${outputPath}/${keys.storage}.key`, keys.encryption)

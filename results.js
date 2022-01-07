@@ -124,10 +124,10 @@ function generateHTML(options) {
   return resultsHTML;
 }
 
-async function results({imageData, srcLang, destLang, languages, ip}) {
+async function results({imageData, srcLang, destLang, languages, user}) {
   let warningsHTML = '';
   const keys = await cache.getKeys(imageData);
-  const annotations = await ocr.ocr({keys, imageData, srcLang, ip});
+  const annotations = await ocr.ocr({keys, imageData, srcLang, user});
   const counts = {
     character: annotations.map(x => x.text).join('').length,
     paragraph: annotations.length
@@ -142,7 +142,7 @@ async function results({imageData, srcLang, destLang, languages, ip}) {
     }
   }
   if (!countExceeded) {
-    await translate.translate({keys, annotations, srcLang, destLang, ip});
+    await translate.translate({keys, annotations, srcLang, destLang, user});
   }
   annotations.forEach(x => {
     if (!x.translation) x.translation = '';

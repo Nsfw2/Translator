@@ -1,10 +1,12 @@
 const {URL} = require('url');
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const multer = require('multer');
 const fetch = require('node-fetch');
 const {SocksProxyAgent} = require('socks-proxy-agent');
 const _ = require('lodash');
-const fsPromises = require('fs').promises;
+const fs = require('fs');
+const fsPromises = fs.promises;
 const index = require('./index');
 const results = require('./results');
 const translate = require('./translate');
@@ -28,6 +30,9 @@ const upload = multer({storage, limits});
 const app = express();
 const port = +(process.argv[2] || 3000);
 
+const cookieSecret = fs.readFileSync('../keys/cookie-secret.txt', {encoding: 'utf8'}).trim();
+app.use(cookieParser(cookieSecret));
+
 app.set('trust proxy', 'loopback');
 
 const torAgent = new SocksProxyAgent('socks://127.0.0.1:9050');
@@ -42,9 +47,20 @@ function parseQuery(keys, query) {
   return output;
 }
 
+function credentials(req) {
+  if (typeof(req.signedCookies.login) !== 'object') return;
+  const name = req.signedCookies.login.name;
+  if (typeof(name) !== 'string') return;
+  return {name, ip: req.ip};
+}
+
+function getUser(req) {
+  return credentials(req) || {ip: req.ip};
+}
+
 app.get('/', (req, res, next) => (async () => {
   const options = parseQuery(index.fillableFields, req.query);
-  options.ip = req.ip;
+  options.user = getUser(req);
   const {html} = await index.index(options);
   res.send(html);
 })().catch(next));
@@ -54,7 +70,7 @@ app.get('/results', (req, res) => {
 });
 
 app.post('/results', upload.single('image'), (req, res, next) => (async () => {
-  const issue = throttle.overCost('cloud', req.ip);
+  const issue = throttle.overCost('cloud', getUser(req));
   if (issue) return res.status(429).send(issue);
   let imageData;
   if (req.file) {
@@ -112,7 +128,7 @@ app.post('/results', upload.single('image'), (req, res, next) => (async () => {
   if (!languages.has(destLang)) {
     return res.status(400).send(`Unsupported destination language: ${_.escape(destLang)}`);
   }
-  const {html} = await results.results({imageData, srcLang, destLang, languages, ip: req.ip});
+  const {html} = await results.results({imageData, srcLang, destLang, languages, user: getUser(req)});
   res.send(html);
 })().catch(next));
 
@@ -126,17 +142,17 @@ app.get(['/tools', '/privacy'], (req, res, next) => (async () => {
 })().catch(next));
 
 app.get('/feedback', (req, res) => {
-  const feedbackHTML = feedback.feedback(req.ip);
+  const feedbackHTML = feedback.feedback(getUser(req));
   res.send(feedbackHTML);
 });
 
 app.post('/feedbackposted', express.urlencoded({extended: false}), (req, res, next) => (async () => {
-  const issue = throttle.overCost('feedback', req.ip);
+  const issue = throttle.overCost('feedback', getUser(req));
   if (issue) return res.status(429).send(issue);
   const {message} = req.body;
   if (typeof message !== 'string') return res.status(400).send('Invalid form data.');
   if (message.length > feedback.maxLength) return res.status(413).send('Error: Message too long.');
-  const responseHTML = await feedback.submit({message}, req.ip);
+  const responseHTML = await feedback.submit({message}, getUser(req));
   res.send(responseHTML);
 })().catch(next));
 

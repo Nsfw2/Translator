@@ -42,15 +42,15 @@ const templates = html.makeTemplates({
   `
 });
 
-function feedback(ip) {
-  const issue = throttle.overCost('feedback', ip);
+function feedback(user) {
+  const issue = throttle.overCost('feedback', user);
   const submit = issue ? templates.cooldown({issue}) : templates.submit();
   const form = templates.form({navbar: html.navbar, submit, maxLength});
   return form;
 }
 
-async function submit(data, ip) {
-  throttle.addCost('feedback', ip, 1);
+async function submit(data, user) {
+  throttle.addCost('feedback', user, 1);
   await log(data);
   const responseHTML = templates.response({navbar: html.navbar});
   return responseHTML;

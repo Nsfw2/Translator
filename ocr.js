@@ -14,7 +14,7 @@ const client = new vision.ImageAnnotatorClient({
 
 class NoResultsError extends Error {}
 
-async function ocr({keys, imageData, srcLang, ip}) {
+async function ocr({keys, imageData, srcLang, user}) {
   let lang2;
   if (!supportedLanguages.has(srcLang)) {
     if (supportedLanguages.has(
@@ -36,7 +36,7 @@ async function ocr({keys, imageData, srcLang, ip}) {
       `o.${srcLang}.json`,
       null,
       async () => {
-        throttle.addCost('cloud', ip, 1.5);
+        throttle.addCost('cloud', user, 1.5);
         const languageHints = (srcLang === 'auto') ? undefined : [srcLang];
         const result = await client.documentTextDetection({
           image: {content: imageData},

@@ -14,7 +14,9 @@ const thresholds = {
 
 const log = {};
 
-function addCost(bucket, ip, cost) {
+function addCost(bucket, user, cost) {
+  const ip = user.ip;
+  if (user.name === 'test') return;
   if (ip === 'bypass') return;
   const time = Date.now();
   if (!(bucket in log)) log[bucket] = [];
@@ -38,7 +40,9 @@ function getCost(bucket, ip, octets, timeWindow) {
   return sum;
 }
 
-function overCost(bucket, ip) {
+function overCost(bucket, user, login) {
+  const ip = user.ip;
+  if (user.name === 'test') return '';
   for (let threshold of thresholds[bucket]) {
     let {octets, cost, timeWindow, issue} = threshold;
     let currentCost = getCost(bucket, ip, octets, timeWindow);

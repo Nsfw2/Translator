@@ -85,11 +85,11 @@ function generateLangHTML(languages, selectedLang) {
   return langHTML;
 }
 
-async function index({imageURL, imageB64, imageB64Name, srcLang, destLang, ip}) {
+async function index({imageURL, imageB64, imageB64Name, srcLang, destLang, user}) {
   const languages = await translate.getLanguages();
   const srcLangHTML = generateLangHTML(languages, srcLang);
   const destLangHTML = generateLangHTML(languages, destLang);
-  const issue = throttle.overCost('cloud', ip);
+  const issue = throttle.overCost('cloud', user);
   const submitHidden = issue ? 'hidden' : '';
   const outputHidden = issue ? '' : 'hidden';
   const indexHTML = templates.html({imageURL, imageB64, imageB64Name, srcLangHTML, destLangHTML, navbar: html.navbar, submitHidden, outputHidden, issue});
