@@ -21,7 +21,7 @@ const templates = html.makeTemplates({
         <section class="about">
           <h1>Translate an image</h1>
           <div class="small">Powered by Google&#39;s <a href="https://cloud.google.com/vision/" target="_blank" rel="noopener">Vision API</a> and Microsoft&#39;s <a href="https://www.microsoft.com/en-us/translator/business/translator-api/" target="_blank" rel="noopener">Translator API</a></div>
-          <div class="small">Adding paid accounts is under consideration. This would allow translating images when the free access is throttled. Contact <a href="mailto:translateimages.site@gmail.com">translateimages.site@gmail.com</a> if interested.</div>
+          <div style="font-weight: bold">This functionality is now available for free directly from Google by clicking the "Search by image" button at <a href="https://images.google.com/">https://images.google.com/</a>. Thus this site has been discontinued. Source code for the site is available at <a href="https://codeberg.org/translateimages/translateimages.site">https://codeberg.org/translateimages/translateimages.site</a>.</div>
         </section>
         <section class="imageselect">
           <label>

@@ -7,6 +7,7 @@ const thresholds = {
     {octets: 3, cost:   4, timeWindow:  1*HOUR, issue: 'Feedback is temporarily unavailable due to heavy usage in your area. Try again in about an hour.'}
   ],
   cloud: [
+    {octets: 0, cost:   0, timeWindow:       0, issue: 'This site has been discontinued.'},
     {octets: 0, cost: 450, timeWindow:  2*HOUR, issue: 'Image translation is temporarily unavailable due to usage exceeding available funding. Try again in about 2 hours.'},
     {octets: 3, cost:  45, timeWindow: 24*HOUR, issue: 'Image translation is temporarily unavailable due to heavy usage in your area. Try again another day.'}
   ]
